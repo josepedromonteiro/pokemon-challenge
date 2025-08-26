@@ -1,10 +1,13 @@
 # Pokédex — Frontend Engineering Challenge (Bloq.it)
 
 Bloq.it Frontend Engineering Challenge: Build a Pokédex app using Vue 3;
+---
 Challenge details: [link](https://github.com/bloqit/fe-engineering-challenge/blob/main/README.md)
+---
 
 > Powered by the public [PokéAPI](https://pokeapi.co/). No keys, no fuss.
 
+# You can also access the deployed app directly via:  [this link](https://pokemon-challenge-rho.vercel.app)
 ---
 
 ## 🧩 Tech Stack
@@ -22,21 +25,24 @@ Challenge details: [link](https://github.com/bloqit/fe-engineering-challenge/blo
 
 ## 🚀 Getting Started
 
-\`\`\`bash
+```bash
+
 # 1) Set correct Node version
+
 nvm use
 
 # 2) Install dependencies
+
 npm install
 
 # 3) Run dev server
+
 npm run dev
 
 # 4) Open in browser
-http://localhost:5174/
-\`\`\`
 
-You can also access the deployed app directly via:  [this link](https://alexop.dev/posts/how-to-structure-vue-projects/)
+http://localhost:5174/
+```
 
 ---
 
@@ -48,7 +54,7 @@ I am aware this approach is **not the most scalable** and would adjust for a lar
 
 ---
 
-## 🗺️  TODO
+## 🗺️ TODO
 
 - Improve accessibility
 - Add e2e tests
@@ -59,5 +65,7 @@ I am aware this approach is **not the most scalable** and would adjust for a lar
 - Support internationalization (i18n)
 - Improve offline support (store number of available Pokémon in local storage)
 - Improve offline image support (SVG fallback or SW caching)
-- Externalize component properties for better testing  
+- Externalize component properties for better testing
+- Mobile optimization
+- Dark mode
 - A LOT of TODOs to solve :/
