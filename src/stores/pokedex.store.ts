@@ -152,14 +152,23 @@ export const usePokedexStore = defineStore('pokedex', () => {
     /**
      * Export current list as CSV
      */
-    const exportCSV = () => {
-        const rows = pokemons.value.map((i) => ({
+    const exportCSV = (itemIds?: number[]) => {
+
+        // TODO - Improve this instead of find use Set or Map
+        const list = itemIds && itemIds.length
+            ? itemIds
+                .map(id => pokemons.value.find(p => p.id === id))
+                .filter((p): p is typeof pokemons.value[number] => !!p)
+            : pokemons.value;
+
+        const rows = list.map(i => ({
             id: i.id,
             name: i.name,
             caughtAt: i.caughtAt ?? '',
             note: i.note ?? '',
         }));
-        toCSV(rows, 'pokedex-wallet.csv');
+
+        toCSV(rows, (itemIds?.length ?? 0) > 0 ? 'partial-pokedex-wallet.csv' : 'pokedex-wallet.csv');
     }
 
     return {

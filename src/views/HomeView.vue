@@ -121,8 +121,7 @@ const tableRows = computed<TableRowData[]>(() =>
 
 const canLoadMore = computed(() => details.value.length >= state.limit);
 
-async
-const loadMore = () => {
+const loadMore = async () => {
   state.offset += state.limit === 0 ? PAGE_SIZE : state.limit;
   state.limit = PAGE_SIZE;
   await fetchDetailsPage(state.limit, state.offset);
