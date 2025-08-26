@@ -1,13 +1,11 @@
 # Pokédex — Frontend Engineering Challenge (Bloq.it)
-
-Bloq.it Frontend Engineering Challenge: Build a Pokédex app using Vue 3;
 ---
-Challenge details: [link](https://github.com/bloqit/fe-engineering-challenge/blob/main/README.md)
+### Challenge details: [link](https://github.com/bloqit/fe-engineering-challenge/blob/main/README.md)
 ---
 
 > Powered by the public [PokéAPI](https://pokeapi.co/). No keys, no fuss.
 
-# You can also access the deployed app directly via:  [this link](https://pokemon-challenge-rho.vercel.app)
+### You can also access the deployed app directly via:  [this link](https://pokemon-challenge-rho.vercel.app)
 ---
 
 ## 🧩 Tech Stack
