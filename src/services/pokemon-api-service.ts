@@ -33,8 +33,8 @@ export class PokemonApiService implements PokemonService {
     return response.data;
   }
 
-  async getPokemonById(id: number): Promise<PokemonDetail> {
-    const response = await this.httpClient.get<PokemonDetail>(`/pokemon/${id}`);
+  async getPokemonById(id: number): Promise<DeepPartial<PokemonDetail>> {
+    const response = await this.httpClient.get<DeepPartial<PokemonDetail>>(`/pokemon/${id}`);
     return response.data;
   }
 

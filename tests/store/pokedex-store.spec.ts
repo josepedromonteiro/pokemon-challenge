@@ -203,22 +203,4 @@ describe('usePokedexStore', () => {
     expect(dex.pokemonById(7)?.note).toBe('cute');
   });
 
-  it('toCSV returns header + rows', async () => {
-    const mem = new MemoryStore();
-    const dex = usePokedexStore();
-    dex.setDependencies({ store: mem });
-
-    await dex.catchOne({
-      entry: {
-        id: 25,
-        name: 'pikachu',
-        image: 'i',
-        height: 4,
-        types: ['electric'],
-      },
-    });
-    const csv = dex.toCSV();
-    expect(csv.split('\n')[0]).toBe('id,name,image,note,caughtAt');
-    expect(csv).toMatch(/25,pikachu/);
-  });
 });

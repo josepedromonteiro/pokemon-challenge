@@ -1,22 +1,23 @@
+<!--TODO - Improve this typing:rows="items as  unknown as DynamicRow[]"-->
 <template>
   <DynamicTable
-    :columns="COLUMNS"
-    :rows="items"
-    :loading="loading"
-    :selecting="selecting"
-    :selected="selected"
-    :pushing="pushing"
-    row-clickable
-    @toggle-select="toggleSelect"
-    @toggle-all="(ids) => (ids ? selectAll(ids) : clear())"
-    @rowClick="onRowClick"
+      :columns="COLUMNS"
+      :rows="items as  unknown as DynamicRow[]"
+      :loading="loading"
+      :selecting="selecting"
+      :selected="selected"
+      :pushing="pushing"
+      row-clickable
+      @toggle-select="toggleSelect"
+      @toggle-all="(ids) => (ids ? selectAll(ids) : clear())"
+      @rowClick="onRowClick"
   >
     <template #cell.sprite="{ value, row }">
       <img
-        :src="value"
-        :alt="row.name"
-        class="h-10 w-10 object-contain"
-        @error="(e) => ((e.target as HTMLImageElement).src = value)"
+          :src="value as string"
+          :alt="row.name as string"
+          class="h-10 w-10 object-contain"
+          @error="(e) => ((e.target as HTMLImageElement).src = value as string)"
       />
     </template>
 
@@ -30,9 +31,9 @@
     <template #cell.types="{ value }">
       <div class="flex flex-wrap gap-1">
         <span
-          v-for="t in value as string[]"
-          :key="t"
-          class="inline-flex items-center rounded-full border border-border/50 px-2 py-0.5 text-xs capitalize"
+            v-for="t in value as string[]"
+            :key="t"
+            class="inline-flex items-center rounded-full border border-border/50 px-2 py-0.5 text-xs capitalize"
         >
           {{ t }}
         </span>
@@ -41,15 +42,15 @@
 
     <template #cell.caughtAt="{ value }">
       <span class="text-sm">
-        {{ value ? new Date(value).toLocaleString() : '--' }}
+        {{ value ? new Date(value as string).toLocaleString() : '--' }}
       </span>
     </template>
 
     <template #cell.actions="{ row }">
       <Button
-        size="xs"
-        :variant="isCaught(row.id) ? 'secondary' : 'default'"
-        @click.stop="toggle({ id: row.id })"
+          size="xs"
+          :variant="isCaught(row.id) ? 'secondary' : 'default'"
+          @click.stop="toggle({ id: row.id })"
       >
         {{ isCaught(row.id) ? 'Release' : 'Catch' }}
       </Button>
@@ -58,17 +59,17 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import DynamicTable from '@/components/DynamicTable.vue';
-import { useSelection } from '@/composables/useSelection.ts';
-import { type TableRowData } from '@/models/poke-ui.ts';
-import { useRouter } from 'vue-router';
-import { usePokedexStore } from '@/stores/pokedex.store.ts';
-import { COLUMNS } from '@/configs/pokemon-table.ts';
+import {Button} from '@/components/ui/button';
+import DynamicTable, {type DynamicRow} from '@/components/DynamicTable.vue';
+import {useSelection} from '@/composables/useSelection.ts';
+import {type TableRowData} from '@/models/poke-ui.ts';
+import {useRouter} from 'vue-router';
+import {usePokedexStore} from '@/stores/pokedex.store.ts';
+import {COLUMNS} from '@/configs/pokemon-table.ts';
 
 const router = useRouter();
-const { selecting, selected, toggleSelect, selectAll, clear } = useSelection();
-const { isCaught, toggle } = usePokedexStore();
+const {selecting, selected, toggleSelect, selectAll, clear} = useSelection();
+const {isCaught, toggle} = usePokedexStore();
 
 defineProps<{
   items: TableRowData[];

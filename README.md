@@ -66,4 +66,6 @@ I am aware this approach is **not the most scalable** and would adjust for a lar
 - Externalize component properties for better testing
 - Mobile optimization
 - Dark mode
+- Improve typing
+- Remove 'any' from test folder
 - A LOT of TODOs to solve :/

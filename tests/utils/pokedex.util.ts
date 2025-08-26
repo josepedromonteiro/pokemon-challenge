@@ -5,6 +5,7 @@ import {
   mapPokemonDetailsToPokedexEntry,
   mapPokemonTypeToString,
 } from '@/utils/pokedex.util.ts';
+import type {DeepPartial} from "@/types/deep-partial.ts";
 
 describe('artwork()', () => {
   it('builds the official-artwork CDN URL by id', () => {
@@ -35,7 +36,7 @@ describe('mapPokemonDetailsToPokedexEntry', () => {
         front_default: 'front.png',
         other: { 'official-artwork': { front_default: 'art.png' } },
       },
-    } as unknown as PokemonDetail;
+    } as unknown as DeepPartial<PokemonDetail>;
 
     const e1 = mapPokemonDetailsToPokedexEntry(withArt);
     expect(e1).toEqual({
@@ -52,7 +53,7 @@ describe('mapPokemonDetailsToPokedexEntry', () => {
       height: 7,
       types: [],
       sprites: { front_default: 'front-only.png', other: {} as any },
-    } as unknown as PokemonDetail;
+    } as unknown as DeepPartial<PokemonDetail>;
 
     expect(mapPokemonDetailsToPokedexEntry(withFront).image).toBe(
       'front-only.png'
@@ -64,7 +65,7 @@ describe('mapPokemonDetailsToPokedexEntry', () => {
       height: 10,
       types: [],
       sprites: {} as any,
-    } as unknown as PokemonDetail;
+    } as unknown as DeepPartial<PokemonDetail>;
 
     expect(mapPokemonDetailsToPokedexEntry(noSprites).image).toBe('');
   });
