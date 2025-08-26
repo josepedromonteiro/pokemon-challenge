@@ -142,7 +142,7 @@ const setupImage = () => {
   imageSrc.value = data.value
     ? (data.value.sprites?.other?.['official-artwork']?.front_default ??
       data.value.sprites?.front_default ??
-      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${d.id}.png`)
+      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.value.id}.png`)
     : '';
 };
 

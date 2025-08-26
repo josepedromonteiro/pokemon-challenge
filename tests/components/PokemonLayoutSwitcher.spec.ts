@@ -48,7 +48,7 @@ describe('PokemonListWrapper', () => {
       props: baseProps,
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
     });
-    expect(wrapper.get('[data-testid="grid"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="grid"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="table"]').exists()).toBe(false);
   });
 
@@ -57,7 +57,7 @@ describe('PokemonListWrapper', () => {
       props: { ...baseProps, viewMode: 'table' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
     });
-    expect(wrapper.get('[data-testid="table"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="table"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="grid"]').exists()).toBe(false);
   });
 

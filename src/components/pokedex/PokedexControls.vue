@@ -9,29 +9,29 @@
 
     <div class="controls-right">
       <Input
-        v-model.trim="nameModel"
-        type="search"
-        placeholder="Search"
-        class="w-56"
+          v-model.trim="nameModel"
+          type="search"
+          placeholder="Search"
+          class="w-56"
       />
 
       <MultiSelect
-        v-model="selectedTypes"
-        :options="typeOptions"
-        placeholder="Filter by types"
-        class="w-56"
-        @done="onSelectTypes"
+          v-model="selectedTypes"
+          :options="typeOptions"
+          placeholder="Filter by types"
+          class="w-56"
+          @done="onSelectTypes"
       />
 
       <Select v-model="sort">
         <SelectTrigger>
-          <SelectValue placeholder="Sort" />
+          <SelectValue placeholder="Sort"/>
         </SelectTrigger>
         <SelectContent>
           <SelectItem
-            v-for="(label, key) in AVAILABLE_SORT_OPTIONS"
-            :key="key"
-            :value="key"
+              v-for="(label, key) in AVAILABLE_SORT_OPTIONS"
+              :key="key"
+              :value="key"
           >
             {{ label }}
           </SelectItem>
@@ -44,9 +44,9 @@
       </Button>
 
       <Button
-        variant="secondary"
-        :disabled="selected.size === 0"
-        @click="pokedexViewStore.removeSelected"
+          variant="secondary"
+          :disabled="selected.size === 0"
+          @click="pokedexViewStore.removeSelected"
       >
         Remove ({{ selected.size }})
       </Button>
@@ -57,11 +57,11 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { Button } from '@/components/ui/button';
-import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
-import { type OrderByFields } from '@/services/pokedex-filter-service.ts';
-import { computed, onMounted, ref, watch } from 'vue';
+import {storeToRefs} from 'pinia';
+import {Button} from '@/components/ui/button';
+import {usePokedexViewStore} from '@/stores/pokedex-view.store.ts';
+import {type OrderByFields} from '@/services/pokedex-filter-service.ts';
+import {computed, onMounted, ref, watch} from 'vue';
 
 import {
   Select,
@@ -71,10 +71,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import MultiSelect from '@/components/MultiSelect.vue';
-import { Input } from '@/components/ui/input';
-import { pokeApiService } from '@/services/pokemon-api-service.ts';
-import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
-import { usePokedexStore } from '@/stores/pokedex.store.ts';
+import {Input} from '@/components/ui/input';
+import {pokeApiService} from '@/services/pokemon-api-service.ts';
+import {usePokedexQuery} from '@/stores/pokedex-query.store.ts';
+import {usePokedexStore} from '@/stores/pokedex.store.ts';
 
 const AVAILABLE_SORT_OPTIONS: Record<OrderByFields, string> = {
   'height-asc': 'Height ↑',
@@ -84,7 +84,7 @@ const AVAILABLE_SORT_OPTIONS: Record<OrderByFields, string> = {
 };
 
 const pokedexViewStore = usePokedexViewStore();
-const { selecting, selected } = storeToRefs(pokedexViewStore);
+const {selecting, selected} = storeToRefs(pokedexViewStore);
 
 const pokedexQuery = usePokedexQuery();
 const pokedexStore = usePokedexStore();
@@ -93,15 +93,18 @@ const sort = ref<OrderByFields | undefined>(undefined);
 
 const allTypes = ref<string[]>([]);
 const selectedTypes = ref<string[]>(
-  (pokedexQuery.filter?.types as string[]) ?? []
+    (pokedexQuery.filter?.types as string[]) ?? []
 );
 
 const nameModel = computed<string>({
-  get: () => pokedexQuery.filter?.name ?? '',
-  set: (val: string) => pokedexQuery.setFilter('name', val || undefined),
+  get: () => (pokedexQuery.filter?.name ?? '') as string,
+  set: (val: string) => {
+    pokedexQuery.setFilter('name', val || undefined)
+  },
 });
+
 const typeOptions = computed(() =>
-  allTypes.value.map((t) => ({ label: t, value: t }))
+    allTypes.value.map((t) => ({label: t, value: t}))
 );
 const nEntries = computed(() => pokedexStore.pokemons.length);
 
@@ -124,11 +127,11 @@ watch(sort, () => {
 });
 
 watch(
-  selectedTypes,
-  (v) => {
-    pokedexQuery.setFilter('types', v.length ? v : undefined);
-  },
-  { immediate: true }
+    selectedTypes,
+    (v) => {
+      pokedexQuery.setFilter('types', v.length ? v : undefined);
+    },
+    {immediate: true}
 );
 </script>
 
