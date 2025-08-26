@@ -60,3 +60,4 @@ I am aware this approach is **not the most scalable** and would adjust for a lar
 - Improve offline support (store number of available Pokémon in local storage)
 - Improve offline image support (SVG fallback or SW caching)
 - Externalize component properties for better testing  
+- A LOT of TODOs to solve :/
