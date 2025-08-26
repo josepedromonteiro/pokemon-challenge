@@ -1,57 +1,29 @@
 <script setup lang="ts">
-import {RouterView} from 'vue-router'
-import type {Item} from "@/models/toolbar.ts";
-import Toolbar from "@/components/toolbar/Toolbar.vue";
-import {onMounted} from "vue";
+import {RouterView} from 'vue-router';
+import NavigationBar from '@/components/navigation-bar/NavigationBar.vue';
+import {Toaster} from '@/components/ui/sonner';
+import {TABS} from '@/configs/toolbar.config.ts';
+import {onMounted} from 'vue';
+import {usePokedexStore} from '@/stores/pokedex.store.ts';
+import 'vue-sonner/style.css' // vue-sonner v2 requires this import
 
-
-const tabs: Item[] = [
-  {
-    key: 'home', label: 'Home', icon: {
-      type: 'image',
-      src: 'images/pokemon.png',
-      alt: 'Pokeball'
-    }, to: '/'
-  }, {
-    key: 'pokedex', label: 'Pokédex', icon: {
-      type: 'image',
-      src: 'images/pokedex.png',
-      alt: 'Pokeball'
-    }, to: '/pokedex'
-  }
-]
-
-
-// const setupTheme = () => {
-//   const root = document.documentElement
-//   const mq = window.matchMedia("(prefers-color-scheme: dark)")
-//
-//   function applyTheme(e: MediaQueryList | MediaQueryListEvent) {
-//     if (e.matches) {
-//       root.classList.add("dark")
-//     } else {
-//       root.classList.remove("dark")
-//     }
-//   }
-//
-//   // Apply on mount
-//   applyTheme(mq)
-//
-//   // React to changes
-//   mq.addEventListener("change", applyTheme)
-// }
+const {load} = usePokedexStore();
 
 onMounted(() => {
-  // setupTheme();
-})
-
+  load();
+});
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
-    <main class="flex-1 p-4 pb-[5.5rem] md:pb-4">
-      <RouterView/>
+  <Toaster class="pointer-events-auto"/>
+  <div class="flex min-h-screen flex-col">
+    <main class="flex-1">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component"/>
+        </transition>
+      </router-view>
     </main>
-    <Toolbar disable-back-button :items="tabs"/>
+    <NavigationBar disable-back-button :items="TABS"/>
   </div>
 </template>

@@ -1,15 +1,20 @@
+<!-- TODO decompose this component, it's too big -->
 <template>
   <div v-if="isLoading" class="panel">
-    <PokemonDetailLayoutLoading/>
+    <PokemonDetailLayoutLoading />
   </div>
-
   <div v-else class="panel">
-    <!-- Header -->
     <div class="header">
       <div></div>
       <div class="header-right">
-        <Button variant="secondary" @click="$emit('share')">Share</Button>
-        <Button :class="caught && 'btn--primary'" @click="$emit('toggle-caught')">
+        <slot name="share">
+          <Button variant="secondary" @click="$emit('share')">Share</Button>
+        </slot>
+        <Button
+          size="sm"
+          :variant="caught ? 'outline' : 'default'"
+          @click="$emit('toggle-caught')"
+        >
           {{ caught ? 'Release' : 'Catch' }}
         </Button>
       </div>
@@ -18,11 +23,14 @@
     <div v-if="localError" class="panel panel--error">
       <p class="text-sm">Failed to load Pokémon.</p>
     </div>
-
-    <!-- Content -->
     <div v-else class="content">
       <div class="info">
-        <img :src="image" :alt="data?.name" class="info-img" @error="onImgError"/>
+        <img
+          :src="imageSrc"
+          :alt="data?.name"
+          class="info-img"
+          @error="onImgError"
+        />
         <div class="info-meta">
           <h1 class="info-title">
             <span class="capitalize">{{ data?.name }}</span>
@@ -51,27 +59,27 @@
       </div>
 
       <div class="stats">
-        <div v-for="s in statList" :key="s.key" class="stat">
+        <div v-for="s in capabilitiesList" :key="s.key" class="stat">
           <div class="stat-label">
             <span class="capitalize">{{ s.key }}</span>
             <span class="stat-value">{{ s.value }}</span>
           </div>
-          <div class="stat-bar">
-            <div class="stat-fill" :style="{ width: s.pct + '%' }"/>
-          </div>
+          <ProgressBar :value="s.pct"></ProgressBar>
         </div>
       </div>
 
       <div v-if="caught" class="note">
         <label class="note-label" for="note">Note</label>
         <textarea
-            id="note"
-            :value="note"
-            @input="$emit('update:note', ($event.target as HTMLTextAreaElement).value)"
-            @blur="$emit('save-note')"
-            class="note-textarea"
-            rows="3"
-            placeholder="Add a personal note…"
+          id="note"
+          :value="note"
+          @input="
+            $emit('update:note', ($event.target as HTMLTextAreaElement).value)
+          "
+          @blur="$emit('save-note')"
+          class="note-textarea"
+          rows="3"
+          placeholder="Add a personal note…"
         />
         <div class="note-hint">Saved automatically on blur.</div>
       </div>
@@ -80,84 +88,106 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
-import {Button} from "@/components/ui/button";
-import type {PokemonDetail} from "@/models/api/pokemon-detail.api.ts";
-import PokemonDetailLayoutLoading from "@/layouts/PokemonDetailLayoutLoading.vue";
+import { ref, watch, onMounted, computed } from 'vue';
+import { Button } from '@/components/ui/button';
+import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
+import PokemonDetailLayoutLoading from '@/layouts/PokemonDetailLayoutLoading.vue';
+import ProgressBar from '@/components/ProgressBar.vue';
+import { onImgError } from '@/utils/image.ts';
 
-const props = withDefaults(defineProps<{
-  pokemon?: PokemonDetail
-  loading?: boolean
-  error?: boolean
-  caught?: boolean
-  caughtAt?: Date | null
-  note?: string
-}>(), {
-  idOrName: null,
-  loading: undefined,
-  error: false,
-  caught: false,
-  caughtAt: null,
-  note: '',
-})
+// Based on https://bulbapedia.bulbagarden.net/wiki/Base_stats
+const STAT_CAP = 255;
+
+const props = withDefaults(
+  defineProps<{
+    pokemon?: PokemonDetail;
+    loading?: boolean;
+    error?: boolean;
+    caught?: boolean;
+    caughtAt?: Date;
+    note?: string;
+  }>(),
+  {
+    loading: undefined,
+    error: false,
+    caught: false,
+    note: '',
+  }
+);
 
 defineEmits<{
-  (e: 'close'): void
-  (e: 'share'): void
-  (e: 'toggle-caught'): void
-  (e: 'update:note', v: string): void
-  (e: 'save-note'): void
-}>()
+  (e: 'close'): void;
+  (e: 'share'): void;
+  (e: 'toggle-caught'): void;
+  (e: 'update:note', v: string): void;
+  (e: 'save-note'): void;
+}>();
 
+const data = ref<PokemonDetail | null>(props.pokemon ?? null);
+const imageSrc = ref<string>('');
+const types = ref<string[]>([]);
+type Capability = { key: string; label: string; value: number; pct: number };
+const capabilitiesList = ref<Capability[]>([]);
 
-const data = ref<PokemonDetail | null>(props.pokemon ?? null)
+const isLoading = computed(() => props.loading);
+const localError = computed(() => props.error);
+const caughtAtPretty = computed(() =>
+  props.caughtAt ? props.caughtAt.toLocaleString() : ''
+);
 
-const isLoading = computed(() => (props.loading))
-const localError = computed(() => props.error)
-const caughtAtPretty = computed(() => (props.caughtAt ? props.caughtAt.toLocaleString() : ''))
+const labelize = (name: string) =>
+  name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-watch(() => props.pokemon, v => {
-  data.value = v ?? data.value
-})
+const setupImage = () => {
+  imageSrc.value = data.value
+    ? (data.value.sprites?.other?.['official-artwork']?.front_default ??
+      data.value.sprites?.front_default ??
+      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${d.id}.png`)
+    : '';
+};
 
-const image = computed(() => {
-  const d = data.value
-  if (!d) return ''
-  return d.sprites?.other?.['official-artwork']?.front_default
-      ?? d.sprites?.front_default
-      ?? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${d.id}.png`
-})
-
-const types = computed(() =>
-    (data.value?.types ?? [])
+const setupTypes = () => {
+  types.value = data.value
+    ? (data.value.types ?? [])
         .slice()
         .sort((a, b) => a.slot - b.slot)
-        .map(t => t.type.name)
-)
+        .map((t) => t.type.name)
+    : [];
+};
 
-const statList = computed(() => {
-  const map = new Map<string, number>()
-  for (const s of (data.value?.stats ?? [])) map.set(s.stat.name, s.base_stat)
-  const mk = (k: string, v: number, max = 200) => ({key: k, value: v, pct: Math.round(Math.min(100, (v / max) * 100))})
-  return [
-    mk('hp', map.get('hp') ?? 0),
-    mk('attack', map.get('attack') ?? 0),
-    mk('defense', map.get('defense') ?? 0),
-    mk('special-attack', map.get('special-attack') ?? 0),
-    mk('special-defense', map.get('special-defense') ?? 0),
-    mk('speed', map.get('speed') ?? 0),
-  ]
-})
-
-function onImgError(e: Event) {
-  const el = e.target as HTMLImageElement
-  const d = data.value
-  if (!d) return
-  el.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${d.id}.png`
+const setupCapabilities = () => {
+  capabilitiesList.value =
+    data.value?.stats.map((s) => {
+      const value = s.base_stat ?? 0;
+      return {
+        key: s.stat.name,
+        label: labelize(s.stat.name),
+        value,
+        pct: Math.round((value / STAT_CAP) * 100),
+      };
+    }) ?? [];
+};
+function setupPokemonData() {
+  setupImage();
+  setupTypes();
+  setupCapabilities();
 }
+
+onMounted(() => {
+  setupPokemonData();
+});
+
+watch(
+  () => props.pokemon,
+  (v) => {
+    data.value = v ?? null;
+    setupPokemonData();
+  },
+  { immediate: true }
+);
 </script>
 
-<style>
+<style scoped>
 @reference "@/index.css";
 
 @layer components {
@@ -175,14 +205,6 @@ function onImgError(e: Event) {
 
   .header-right {
     @apply flex items-center gap-2;
-  }
-
-  .btn {
-    @apply rounded-md border border-border/60 bg-background/70 px-3 py-2 backdrop-blur;
-  }
-
-  .btn--primary {
-    @apply bg-primary text-primary-foreground border-transparent;
   }
 
   .content {
@@ -245,14 +267,6 @@ function onImgError(e: Event) {
     @apply font-semibold;
   }
 
-  .stat-bar {
-    @apply h-2 rounded bg-muted/60 overflow-hidden;
-  }
-
-  .stat-fill {
-    @apply h-full bg-primary;
-  }
-
   .note {
     @apply space-y-2;
   }
@@ -262,7 +276,7 @@ function onImgError(e: Event) {
   }
 
   .note-textarea {
-    @apply w-full resize-y rounded-md border border-border/60 bg-background/70 p-3 outline-none backdrop-blur;
+    @apply w-full resize-y rounded-md border border-border/60 bg-background/70 p-3 backdrop-blur outline-none;
   }
 
   .note-hint {

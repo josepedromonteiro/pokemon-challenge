@@ -1,17 +1,62 @@
-# Vue 3 + TypeScript + Vite
+# Pokédex — Frontend Engineering Challenge (Bloq.it)
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Bloq.it Frontend Engineering Challenge: Build a Pokédex app using Vue 3;
+Challenge details: [link](https://github.com/bloqit/fe-engineering-challenge/blob/main/README.md)
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+> Powered by the public [PokéAPI](https://pokeapi.co/). No keys, no fuss.
 
+---
 
+## 🧩 Tech Stack
 
--- Run nvm use (to use the verison inside .nvmrc)
+- **Vue 3** + **TypeScript** (Composition API)
+- **Pinia** for state management
+- **Vite** dev/build tooling
+- **Vue Router**
+- **Axios** for API
+- **LocalStorage** (simple repo layer) for persistence
+- **Vitest** for unit tests
+- **Shadcn-Vue** for UI elements
 
+---
 
-TODO:
-- Accessibility
-- Unit tests
-- e2e tests
-- use graphql
-# pokemon-challenge
+## 🚀 Getting Started
+
+\`\`\`bash
+# 1) Set correct Node version
+nvm use
+
+# 2) Install dependencies
+npm install
+
+# 3) Run dev server
+npm run dev
+
+# 4) Open in browser
+http://localhost:5174/
+\`\`\`
+
+You can also access the deployed app directly via:  [this link](https://alexop.dev/posts/how-to-structure-vue-projects/)
+
+---
+
+## 🗂️ Project Structure
+
+I followed [this article](https://alexop.dev/posts/how-to-structure-vue-projects/) as a reference.  
+Since this is a small project, I opted for the simpler structure.  
+I am aware this approach is **not the most scalable** and would adjust for a larger production app.
+
+---
+
+## 🗺️  TODO
+
+- Improve accessibility
+- Add e2e tests
+- Use GraphQL (provided by Pokemon API)
+- Use virtual scroll
+- Loading on scroll / Lazy loading scroll
+- Improve test coverage
+- Support internationalization (i18n)
+- Improve offline support (store number of available Pokémon in local storage)
+- Improve offline image support (SVG fallback or SW caching)
+- Externalize component properties for better testing  

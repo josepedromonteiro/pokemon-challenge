@@ -1,43 +1,42 @@
 <template>
   <div class="grid">
-    <template v-if="loading && items.length === 0">
-      <GridLoaderContent/>
-    </template>
-
     <PokemonCard
-        v-for="p in items"
-        :key="p.id"
-        :id="p.id"
-        :name="p.name"
-        :image="p.image"
-        :caught="isCaught(p.id)"
-        @toggle-caught="$emit('toggle-caught', p.id)"
+      v-for="p in items"
+      :key="p.id"
+      :id="p.id"
+      :name="p.name"
+      :image="p.image"
+      :caught="isCaught(p.id)"
+      @toggle-caught="toggle({ id: p.id })"
     />
+    <template v-if="loading">
+      <GridLoaderContent />
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import PokemonCard from './PokemonCard.vue'
-import {usePokedex} from '@/composables/usePokedex'
-import GridLoaderContent from "@/components/GridLoaderContent.vue";
-import type {GridItemData} from "@/models/poke.ui.ts";
+import PokemonCard from './PokemonCard.vue';
+import GridLoaderContent from '@/components/GridLoaderContent.vue';
+import type { GridItemData } from '@/models/poke-ui.ts';
+import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 defineProps<{
-  items: GridItemData[]
-  loading: boolean
-}>()
+  items: GridItemData[];
+  loading: boolean;
+}>();
 
-defineEmits<{ (e: 'toggle-caught', id: number): void }>()
+defineEmits<{ (e: 'toggle-caught', id: number): void }>();
 
-const {isCaught} = usePokedex()
+const { isCaught, toggle } = usePokedexStore();
 </script>
 
-<style>
+<style scoped>
 @reference "@/index.css";
 
 @layer components {
   .grid {
-    @apply mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+    @apply grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
   }
 }
 </style>

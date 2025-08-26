@@ -1,85 +1,138 @@
-<!-- src/components/pokedex/PokedexControls.vue -->
 <template>
-  <div class="controls">
+  <div class="toolbar controls">
     <div class="controls-left">
       <h1 class="controls-title">My Pokédex</h1>
-      <p class="controls-meta" v-if="store.entries.length">Caught: <b>{{ store.entries.length }}</b></p>
+      <p class="controls-meta" v-if="nEntries">
+        Caught: <b>{{ nEntries }}</b>
+      </p>
     </div>
 
     <div class="controls-right">
-      <input
-          v-model.trim="nameModel"
-          type="search"
-          placeholder="Search"
-          class="input"
+      <Input
+        v-model.trim="nameModel"
+        type="search"
+        placeholder="Search"
+        class="w-56"
+      />
+
+      <MultiSelect
+        v-model="selectedTypes"
+        :options="typeOptions"
+        placeholder="Filter by types"
+        class="w-56"
+        @done="onSelectTypes"
       />
 
       <Select v-model="sort">
         <SelectTrigger>
-          <SelectValue placeholder="Sort"/>
+          <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem
-              v-for="(label, key) in AVAILABLE_SORT_OPTIONS"
-              :key="key"
-              :value="key"
+            v-for="(label, key) in AVAILABLE_SORT_OPTIONS"
+            :key="key"
+            :value="key"
           >
             {{ label }}
           </SelectItem>
-          <SelectItem key="clear" :value="null">
-            Clear
-          </SelectItem>
+          <SelectItem key="clear" :value="null"> Clear</SelectItem>
         </SelectContent>
       </Select>
 
-      <Button variant="outline" @click="toggleSelecting">
+      <Button variant="secondary" @click="pokedexViewStore.toggleSelecting">
         {{ selecting ? 'Cancel' : 'Select' }}
       </Button>
 
-      <Button variant="outline" :disabled="selected.size === 0" @click="removeSelected">
+      <Button
+        variant="secondary"
+        :disabled="selected.size === 0"
+        @click="pokedexViewStore.removeSelected"
+      >
         Remove ({{ selected.size }})
       </Button>
 
-      <Button @click="exportCSV">Export CSV</Button>
+      <Button @click="pokedexViewStore.exportCSV">Export CSV</Button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {storeToRefs} from 'pinia'
-import {Button} from '@/components/ui/button'
-import {usePokedexView} from "@/stores/pokedex.store.ts";
-import {type OrderByFields} from "@/services/filter-service.local.ts";
-import {computed, ref, watch} from "vue";
-import {pokedexQuery} from "@/composables/useListQuery.ts";
-import {Select, SelectContent, SelectTrigger, SelectItem, SelectValue} from "@/components/ui/select";
+import { storeToRefs } from 'pinia';
+import { Button } from '@/components/ui/button';
+import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
+import { type OrderByFields } from '@/services/pokedex-filter-service.ts';
+import { computed, onMounted, ref, watch } from 'vue';
+
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
+import MultiSelect from '@/components/MultiSelect.vue';
+import { Input } from '@/components/ui/input';
+import { pokeApiService } from '@/services/pokemon-api-service.ts';
+import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
+import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 const AVAILABLE_SORT_OPTIONS: Record<OrderByFields, string> = {
-  "height-asc": "Height ↑",
-  "height-desc": "Height ↓",
-  "oldest": "Oldest",
-  "newest": "Newest",
+  'height-asc': 'Height ↑',
+  'height-desc': 'Height ↓',
+  oldest: 'Oldest',
+  newest: 'Newest',
 };
 
-const store = usePokedexView();
+const pokedexViewStore = usePokedexViewStore();
+const { selecting, selected } = storeToRefs(pokedexViewStore);
+
+const pokedexQuery = usePokedexQuery();
+const pokedexStore = usePokedexStore();
 
 const sort = ref<OrderByFields | undefined>(undefined);
 
-const {selecting, selected} = storeToRefs(store)
-const {toggleSelecting, removeSelected, exportCSV} = store;
+const allTypes = ref<string[]>([]);
+const selectedTypes = ref<string[]>(
+  (pokedexQuery.filter?.types as string[]) ?? []
+);
 
 const nameModel = computed<string>({
-  get: () => pokedexQuery.filter.value?.name ?? "",
-  set: (val) => pokedexQuery.setFilter("name", val || undefined),
+  get: () => pokedexQuery.filter?.name ?? '',
+  set: (val: string) => pokedexQuery.setFilter('name', val || undefined),
+});
+const typeOptions = computed(() =>
+  allTypes.value.map((t) => ({ label: t, value: t }))
+);
+const nEntries = computed(() => pokedexStore.pokemons.length);
+
+const onSelectTypes = () => {
+  pokedexQuery.setFilter('types', selectedTypes.value);
+};
+
+const setupTypes = () => {
+  pokeApiService.getPokemonTypes().then((res) => {
+    allTypes.value = res.results.map((type) => type.name);
+  });
+};
+
+onMounted(() => {
+  setupTypes();
 });
 
 watch(sort, () => {
   pokedexQuery.setOrderBy(sort.value);
 });
 
+watch(
+  selectedTypes,
+  (v) => {
+    pokedexQuery.setFilter('types', v.length ? v : undefined);
+  },
+  { immediate: true }
+);
 </script>
 
-<style>
+<style scoped>
 @reference "@/index.css";
 @layer components {
   .controls {
@@ -99,11 +152,7 @@ watch(sort, () => {
   }
 
   .controls-right {
-    @apply flex items-center gap-2;
-  }
-
-  .input {
-    @apply h-10 w-56 max-w-full rounded-md border border-border/60 bg-background/70 px-3 outline-none backdrop-blur;
+    @apply flex flex-wrap items-center gap-2;
   }
 }
 </style>
