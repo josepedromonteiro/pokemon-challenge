@@ -82,21 +82,6 @@ describe('usePokedexViewStore', () => {
     expect(releaseSpy).not.toHaveBeenCalled();
   });
 
-  it('exportCSV maps current entries and calls toCSV with filename', () => {
-    const s = usePokedexViewStore();
-    mockPokemons.value = [
-      { id: 1, name: 'bulbasaur', caughtAt: 't1', note: 'a' },
-      { id: 25, name: 'pikachu', caughtAt: undefined, note: undefined },
-    ];
-    s.exportCSV();
-    expect(toCSVSpy).toHaveBeenCalledTimes(1);
-    const [rows, filename] = toCSVSpy.mock.calls[0];
-    expect(filename).toBe('pokedex-wallet.csv');
-    expect(rows).toEqual([
-      { id: 1, name: 'bulbasaur', caughtAt: 't1', note: 'a' },
-      { id: 25, name: 'pikachu', caughtAt: '', note: '' },
-    ]);
-  });
 
   it('init calls load on core store', async () => {
     const s = usePokedexViewStore();

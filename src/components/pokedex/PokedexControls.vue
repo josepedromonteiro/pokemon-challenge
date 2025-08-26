@@ -51,7 +51,7 @@
         Remove ({{ selected.size }})
       </Button>
 
-      <Button @click="pokedexViewStore.exportCSV">Export CSV</Button>
+      <Button @click="pokedexStore.exportCSV">Export CSV</Button>
     </div>
   </div>
 </template>

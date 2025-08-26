@@ -170,7 +170,7 @@ export type DynamicColumn = {
   cellClass?: string;
 };
 
-export type DynamicRow = Record<string, any> & { id: number };
+export type DynamicRow = Record<string, unknown> & { id: number };
 
 const props = defineProps<DynamicTableProps>();
 

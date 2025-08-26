@@ -10,12 +10,12 @@
 
 ## 🧩 Tech Stack
 
-- **Vue 3** + **TypeScript** (Composition API)
+- **Vue 3** (Composition API)
 - **Pinia** for state management
 - **Vite** dev/build tooling
 - **Vue Router**
 - **Axios** for API
-- **LocalStorage** (simple repo layer) for persistence
+- **LocalStorage** for persistence
 - **Vitest** for unit tests
 - **Shadcn-Vue** for UI elements
 
@@ -66,4 +66,6 @@ I am aware this approach is **not the most scalable** and would adjust for a lar
 - Externalize component properties for better testing
 - Mobile optimization
 - Dark mode
+- Improve typing
+- Remove 'any' from test folder
 - A LOT of TODOs to solve :/

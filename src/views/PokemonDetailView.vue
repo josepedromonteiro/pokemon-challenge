@@ -46,7 +46,6 @@ import {
   type ComputedRef,
   onMounted,
   reactive,
-  type Ref,
   ref,
   watch,
 } from 'vue';
@@ -67,6 +66,7 @@ import { Button } from '@/components/ui/button';
 import { Clipboard, Send, Share2 } from 'lucide-vue-next';
 import { toast } from 'vue-sonner'
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
+import type {DeepPartial} from "@/types/deep-partial.ts";
 
 const route = useRoute();
 const { isCaught, setNote, pokemonById, toggle, load } = usePokedexStore();
@@ -97,8 +97,8 @@ const state = reactive<{
 });
 
 const note = ref(pokemonInDex.value?.note ?? '');
-const pokemon: Ref<PokemonDetail | undefined> = ref<
-  PokemonDetail | undefined
+const pokemon = ref<
+    DeepPartial<PokemonDetail>  | undefined
 >();
 
 const saveNote = () => {
