@@ -15,7 +15,7 @@ type DetailState = {
   error: boolean;
 };
 
-export function usePokemonDetailView() {
+export const usePokemonDetailView = () => {
   const route = useRoute();
   const { isCaught, setNote, pokemonById, toggle } = usePokedexStore();
 
@@ -24,9 +24,6 @@ export function usePokemonDetailView() {
     const n = Number(raw);
     return Number.isFinite(n) ? n : null;
   });
-
-  const state = reactive<DetailState>({ loading: false, error: false });
-  const pokemon = ref<DeepPartial<PokemonDetail> | undefined>(undefined);
 
   const pokemonInDex = computed<PokedexEntry | undefined>(() =>
     currentId.value ? pokemonById(currentId.value) : undefined
@@ -39,6 +36,9 @@ export function usePokemonDetailView() {
       ? normalizeDate(pokemonInDex.value.caughtAt)
       : undefined
   );
+
+  const state = reactive<DetailState>({ loading: false, error: false });
+  const pokemon = ref<DeepPartial<PokemonDetail> | undefined>(undefined);
 
   const note = ref<string>(pokemonInDex.value?.note ?? '');
   const saveNote = () => {
@@ -117,4 +117,4 @@ export function usePokemonDetailView() {
     shareUsingWebApi,
     loadPokemon,
   };
-}
+};

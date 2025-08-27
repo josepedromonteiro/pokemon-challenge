@@ -1,4 +1,3 @@
-// composables/useHomeView.ts
 import { ref, computed } from 'vue';
 import type { DeepPartial } from '@/types/deep-partial';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
@@ -17,6 +16,35 @@ export function useHomeView() {
   const ui = useUI();
   const { pokemonById, isCaught } = usePokedexStore();
 
+  const viewMode = computed<ViewMode>({
+    get: () => ui.viewMode,
+    set: (m) => ui.setViewMode(m),
+  });
+
+  const filtered = computed(() => {
+    const q = query.value.trim().toLowerCase();
+    if (!q) return details.value;
+    return details.value.filter(
+      (d) =>
+        (d.name ?? '').toLowerCase().includes(q) || String(d.id ?? '') === q
+    );
+  });
+
+  const gridItems = computed<GridItemData[]>(() =>
+    filtered.value.map(toGridItem)
+  );
+
+  const tableRows = computed<TableRowData[]>(() =>
+    filtered.value.map((d) =>
+      mapToTableRowData(d, {
+        isCaught: isCaught(d.id!),
+        caughtAt: pokemonById(d.id!)?.caughtAt,
+      })
+    )
+  );
+
+  const canLoadMore = computed(() => details.value.length < total.value);
+
   const details = ref<DeepPartial<PokemonDetail>[]>([]);
   const total = ref(0);
   const loading = ref(false);
@@ -26,12 +54,7 @@ export function useHomeView() {
   const offset = ref(0);
   const query = ref('');
 
-  const viewMode = computed<ViewMode>({
-    get: () => ui.viewMode,
-    set: (m) => ui.setViewMode(m),
-  });
-
-  async function loadPage({ replace = false } = {}) {
+  const loadPage = async ({ replace = false } = {}) => {
     loading.value = true;
     error.value = null;
 
@@ -54,42 +77,17 @@ export function useHomeView() {
     } finally {
       loading.value = false;
     }
-  }
+  };
 
-  function resetAndReload() {
+  const resetAndReload = () => {
     offset.value = 0;
     return loadPage({ replace: true });
-  }
+  };
 
-  function loadMore() {
+  const loadMore = () => {
     offset.value += pageSize.value;
     return loadPage();
-  }
-
-  const filtered = computed(() => {
-    const q = query.value.trim().toLowerCase();
-    if (!q) return details.value;
-    return details.value.filter(
-      (d) =>
-        (d.name ?? '').toLowerCase().includes(q) || String(d.id ?? '') === q
-    );
-  });
-
-  // mappings for UI
-  const gridItems = computed<GridItemData[]>(() =>
-    filtered.value.map(toGridItem)
-  );
-
-  const tableRows = computed<TableRowData[]>(() =>
-    filtered.value.map((d) =>
-      mapToTableRowData(d, {
-        isCaught: isCaught(d.id!),
-        caughtAt: pokemonById(d.id!)?.caughtAt,
-      })
-    )
-  );
-
-  const canLoadMore = computed(() => details.value.length < total.value);
+  };
 
   return {
     details,

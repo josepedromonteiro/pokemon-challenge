@@ -1,4 +1,3 @@
-<!-- src/views/HomeView.vue -->
 <template>
   <section class="wrap">
     <ControlsBar v-model="query" />

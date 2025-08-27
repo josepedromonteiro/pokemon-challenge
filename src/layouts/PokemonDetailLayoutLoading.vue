@@ -32,7 +32,6 @@
       </div>
     </div>
 
-    <!-- stats -->
     <div class="stats mt-6 grid gap-3 sm:grid-cols-2">
       <div v-for="i in 6" :key="i" class="space-y-1">
         <div class="flex items-baseline justify-between">
@@ -43,7 +42,6 @@
       </div>
     </div>
 
-    <!-- note -->
     <div class="note mt-6 space-y-2">
       <div class="skel skel-line h-4 w-16" />
       <div class="skel skel-block h-24" />

@@ -22,7 +22,6 @@
             >
           </template>
 
-          <!-- Placeholder -->
           <span v-else class="truncate text-foreground/60">
             {{ placeholder }}
           </span>

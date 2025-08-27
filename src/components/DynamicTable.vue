@@ -60,7 +60,7 @@
         </TableRow>
       </TableBody>
 
-      <!-- Loading -->
+      <!--      Loaiding-->
       <TableBody v-else-if="loading">
         <TableRow v-for="i in 6" :key="i">
           <TableCell :colspan="colspan">
@@ -69,7 +69,7 @@
         </TableRow>
       </TableBody>
 
-      <!-- Empty -->
+      <!--      Empty-->
       <TableBody v-else>
         <TableRow>
           <TableCell
