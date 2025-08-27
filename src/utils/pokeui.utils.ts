@@ -5,11 +5,11 @@ import { generateSpritesWillFallback } from '@/models/api/poke.api.ts';
 
 export const toGridItem = (
   pokemonData: DeepPartial<PokemonDetail>
-): GridItemData =>{
+): GridItemData => {
   const id = pokemonData.id!;
   return {
     id,
     name: pokemonData.name ?? String(id),
     image: generateSpritesWillFallback(pokemonData),
   };
-}
+};

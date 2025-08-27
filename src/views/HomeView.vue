@@ -1,8 +1,7 @@
 <!-- src/views/HomeView.vue -->
 <template>
   <section class="wrap">
-
-    <ControlsBar v-model="query"/>
+    <ControlsBar v-model="query" />
 
     <div class="mt-2 flex">
       <div class="status" v-if="!loading && !error">
@@ -12,10 +11,10 @@
       <Tabs class="tabs" v-model="viewMode">
         <TabsList>
           <TabsTrigger value="grid">
-            <GridIcon/>
+            <GridIcon />
           </TabsTrigger>
           <TabsTrigger value="table">
-            <TableIcon/>
+            <TableIcon />
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -27,10 +26,10 @@
     </div>
 
     <PokemonLayoutSwitcher
-        v-model:view-mode="viewMode"
-        :grid-items="gridItems"
-        :table-rows="tableRows"
-        :loading="loading"
+      v-model:view-mode="viewMode"
+      :grid-items="gridItems"
+      :table-rows="tableRows"
+      :loading="loading"
     />
 
     <div v-if="!loading && !error && canLoadMore" class="pager">
@@ -40,23 +39,31 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted} from 'vue'
-import {useHomeView} from '@/composables/useHomeView'
-import ControlsBar from '@/components/ControlsBar.vue'
-import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue'
-import {Tabs, TabsTrigger, TabsList} from '@/components/ui/tabs'
-import {GridIcon, TableIcon} from 'lucide-vue-next'
-import {Button} from '@/components/ui/button'
+import { onMounted } from 'vue';
+import { useHomeView } from '@/composables/useHomeView';
+import ControlsBar from '@/components/ControlsBar.vue';
+import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
+import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
+import { GridIcon, TableIcon } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
 
 const {
-  query, total, loading, error, viewMode,
-  gridItems, tableRows, canLoadMore,
-  loadPage, resetAndReload, loadMore,
+  query,
+  total,
+  loading,
+  error,
+  viewMode,
+  gridItems,
+  tableRows,
+  canLoadMore,
+  loadPage,
+  resetAndReload,
+  loadMore,
 } = useHomeView();
 
 onMounted(() => {
   loadPage();
-})
+});
 </script>
 
 <style scoped>

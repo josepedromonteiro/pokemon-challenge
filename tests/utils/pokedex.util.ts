@@ -5,7 +5,7 @@ import {
   mapPokemonDetailsToPokedexEntry,
   mapPokemonTypeToString,
 } from '@/utils/pokedex.util.ts';
-import type {DeepPartial} from "@/types/deep-partial.ts";
+import type { DeepPartial } from '@/types/deep-partial.ts';
 
 describe('artwork()', () => {
   it('builds the official-artwork CDN URL by id', () => {

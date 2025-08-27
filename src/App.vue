@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {RouterView} from 'vue-router';
+import { RouterView } from 'vue-router';
 import NavigationBar from '@/components/navigation-bar/NavigationBar.vue';
-import {Toaster} from '@/components/ui/sonner';
-import {TABS} from '@/configs/toolbar.config.ts';
-import {onMounted} from 'vue';
-import {usePokedexStore} from '@/stores/pokedex.store.ts';
-import 'vue-sonner/style.css' // vue-sonner v2 requires this import
+import { Toaster } from '@/components/ui/sonner';
+import { TABS } from '@/configs/toolbar.config.ts';
+import { onMounted } from 'vue';
+import { usePokedexStore } from '@/stores/pokedex.store.ts';
+import 'vue-sonner/style.css'; // vue-sonner v2 requires this import
 
-const {load} = usePokedexStore();
+const { load } = usePokedexStore();
 
 onMounted(() => {
   load();
@@ -15,15 +15,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <Toaster class="pointer-events-auto"/>
+  <Toaster class="pointer-events-auto" />
   <div class="flex min-h-screen flex-col">
     <main class="flex-1">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <component :is="Component"/>
+          <component :is="Component" />
         </transition>
       </router-view>
     </main>
-    <NavigationBar disable-back-button :items="TABS"/>
+    <NavigationBar disable-back-button :items="TABS" />
   </div>
 </template>

@@ -34,7 +34,9 @@ export class PokemonApiService implements PokemonService {
   }
 
   async getPokemonById(id: number): Promise<DeepPartial<PokemonDetail>> {
-    const response = await this.httpClient.get<DeepPartial<PokemonDetail>>(`/pokemon/${id}`);
+    const response = await this.httpClient.get<DeepPartial<PokemonDetail>>(
+      `/pokemon/${id}`
+    );
     return response.data;
   }
 

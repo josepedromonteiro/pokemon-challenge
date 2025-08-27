@@ -202,5 +202,4 @@ describe('usePokedexStore', () => {
     expect(mem.setNoteSpy).toHaveBeenCalledWith({ id: 7, note: 'cute' });
     expect(dex.pokemonById(7)?.note).toBe('cute');
   });
-
 });

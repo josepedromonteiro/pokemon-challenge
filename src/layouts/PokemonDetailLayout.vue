@@ -1,7 +1,7 @@
 <!-- TODO decompose this component, it's too big -->
 <template>
   <div v-if="isLoading" class="panel">
-    <PokemonDetailLayoutLoading/>
+    <PokemonDetailLayoutLoading />
   </div>
   <div v-else class="panel">
     <div class="header">
@@ -11,9 +11,9 @@
           <Button variant="secondary" @click="$emit('share')">Share</Button>
         </slot>
         <Button
-            size="sm"
-            :variant="caught ? 'outline' : 'default'"
-            @click="$emit('toggle-caught')"
+          size="sm"
+          :variant="caught ? 'outline' : 'default'"
+          @click="$emit('toggle-caught')"
         >
           {{ caught ? 'Release' : 'Catch' }}
         </Button>
@@ -26,10 +26,10 @@
     <div v-else class="content">
       <div class="info">
         <img
-            :src="imageSrc"
-            :alt="data?.name"
-            class="info-img"
-            @error="onImgError"
+          :src="imageSrc"
+          :alt="data?.name"
+          class="info-img"
+          @error="onImgError"
         />
         <div class="info-meta">
           <h1 class="info-title">
@@ -71,15 +71,15 @@
       <div v-if="caught" class="note">
         <label class="note-label" for="note">Note</label>
         <textarea
-            id="note"
-            :value="note"
-            @input="
+          id="note"
+          :value="note"
+          @input="
             $emit('update:note', ($event.target as HTMLTextAreaElement).value)
           "
-            @blur="$emit('save-note')"
-            class="note-textarea"
-            rows="3"
-            placeholder="Add a personal note…"
+          @blur="$emit('save-note')"
+          class="note-textarea"
+          rows="3"
+          placeholder="Add a personal note…"
         />
         <div class="note-hint">Saved automatically on blur.</div>
       </div>
@@ -88,32 +88,32 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch, onMounted, computed} from 'vue';
-import {Button} from '@/components/ui/button';
-import type {PokemonDetail} from '@/models/api/pokemon-detail.api';
+import { ref, watch, onMounted, computed } from 'vue';
+import { Button } from '@/components/ui/button';
+import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
 import PokemonDetailLayoutLoading from '@/layouts/PokemonDetailLayoutLoading.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
-import {onImgError} from '@/utils/image.ts';
-import type {DeepPartial} from "@/types/deep-partial.ts";
+import { onImgError } from '@/utils/image.ts';
+import type { DeepPartial } from '@/types/deep-partial.ts';
 
 // Based on https://bulbapedia.bulbagarden.net/wiki/Base_stats
 const STAT_CAP = 255;
 
 const props = withDefaults(
-    defineProps<{
-      pokemon?: DeepPartial<PokemonDetail>;
-      loading?: boolean;
-      error?: boolean;
-      caught?: boolean;
-      caughtAt?: Date;
-      note?: string;
-    }>(),
-    {
-      loading: undefined,
-      error: false,
-      caught: false,
-      note: '',
-    }
+  defineProps<{
+    pokemon?: DeepPartial<PokemonDetail>;
+    loading?: boolean;
+    error?: boolean;
+    caught?: boolean;
+    caughtAt?: Date;
+    note?: string;
+  }>(),
+  {
+    loading: undefined,
+    error: false,
+    caught: false,
+    note: '',
+  }
 );
 
 defineEmits<{
@@ -133,59 +133,59 @@ const capabilitiesList = ref<Capability[]>([]);
 const isLoading = computed(() => props.loading);
 const localError = computed(() => props.error);
 const caughtAtPretty = computed(() =>
-    props.caughtAt ? props.caughtAt.toLocaleString() : ''
+  props.caughtAt ? props.caughtAt.toLocaleString() : ''
 );
 
 const labelize = (name: string) =>
-    name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
 const setupImage = () => {
   imageSrc.value = data.value
-      ? (data.value.sprites?.other?.['official-artwork']?.front_default ??
-          data.value.sprites?.front_default ??
-          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.value.id}.png`)
-      : '';
+    ? (data.value.sprites?.other?.['official-artwork']?.front_default ??
+      data.value.sprites?.front_default ??
+      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.value.id}.png`)
+    : '';
 };
 
 const setupTypes = () => {
   types.value = data.value?.types
-      ? (data.value.types ?? [])
-          .slice()
-          .sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0))
-          .map((t) => t.type?.name ?? '')
-      : [];
+    ? (data.value.types ?? [])
+        .slice()
+        .sort((a, b) => (a.slot ?? 0) - (b.slot ?? 0))
+        .map((t) => t.type?.name ?? '')
+    : [];
 };
 
 const setupCapabilities = () => {
   capabilitiesList.value =
-      data.value?.stats?.map((s, index) => {
-        const value = s.base_stat ?? 0;
-        return {
-          key: s.stat?.name ?? `${index}`,
-          label: labelize(s.stat?.name ?? ''),
-          value,
-          pct: Math.round((value / STAT_CAP) * 100),
-        };
-      }) ?? [];
+    data.value?.stats?.map((s, index) => {
+      const value = s.base_stat ?? 0;
+      return {
+        key: s.stat?.name ?? `${index}`,
+        label: labelize(s.stat?.name ?? ''),
+        value,
+        pct: Math.round((value / STAT_CAP) * 100),
+      };
+    }) ?? [];
 };
 
-const setupPokemonData = ()=> {
+const setupPokemonData = () => {
   setupImage();
   setupTypes();
   setupCapabilities();
-}
+};
 
 onMounted(() => {
   setupPokemonData();
 });
 
 watch(
-    () => props.pokemon,
-    (v) => {
-      data.value = v ?? null;
-      setupPokemonData();
-    },
-    {immediate: true}
+  () => props.pokemon,
+  (v) => {
+    data.value = v ?? null;
+    setupPokemonData();
+  },
+  { immediate: true }
 );
 </script>
 

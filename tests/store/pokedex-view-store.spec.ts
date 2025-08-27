@@ -82,7 +82,6 @@ describe('usePokedexViewStore', () => {
     expect(releaseSpy).not.toHaveBeenCalled();
   });
 
-
   it('init calls load on core store', async () => {
     const s = usePokedexViewStore();
     await s.init();
