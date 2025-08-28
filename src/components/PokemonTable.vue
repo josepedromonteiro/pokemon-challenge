@@ -2,7 +2,7 @@
 <template>
   <DynamicTable
     :columns="COLUMNS"
-    :rows="items as unknown as DynamicRow[]"
+    :rows="items"
     :loading="loading"
     :selecting="selecting"
     :selected="selected"
@@ -78,8 +78,8 @@ defineProps<{
   pushing?: boolean;
 }>();
 
-const onRowClick = (row: TableRowData) => {
-  router.push(`/pokemon/${row.id}`);
+const onRowClick = (rowData: DynamicRow) => {
+  router.push(`/pokemon/${rowData.id}`);
 };
 </script>
 

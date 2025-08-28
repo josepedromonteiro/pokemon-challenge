@@ -1,3 +1,4 @@
+import type { DynamicRow } from '@/components/DynamicTable.vue';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
 
@@ -11,7 +12,7 @@ export interface GridItemData {
   image: string;
 }
 
-export interface TableRowData {
+export interface TableRowData extends DynamicRow {
   id: number;
   name: string;
   sprite?: string;
