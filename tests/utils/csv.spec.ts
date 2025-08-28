@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
 import { toCSV } from '@/utils/csv.util.ts';
 
 const blobToText = async (b: Blob | null) => {
@@ -30,7 +31,7 @@ describe('toCSV', () => {
 
     vi.spyOn(document, 'createElement').mockImplementation((tag: any) => {
       if (String(tag).toLowerCase() === 'a') {
-        return { href: '', download: '', click: clickSpy } as any;
+        return { click: clickSpy, download: '', href: '' } as any;
       }
       return realCreateElement.call(document, tag);
     });
@@ -52,17 +53,17 @@ describe('toCSV', () => {
   it('creates CSV, clicks anchor, and revokes URL (default filename)', async () => {
     const rows = [
       {
-        id: 1,
-        name: 'bulba, "saur"',
-        image: 'img',
-        note: '',
         caughtAt: '2020-01-01T00:00:00Z',
+        id: 1,
+        image: 'img',
+        name: 'bulba, "saur"',
+        note: '',
       },
       {
-        name: 'ivysaur',
+        caughtAt: '2020-01-02T00:00:00Z',
         id: 2,
         image: 'img',
-        caughtAt: '2020-01-02T00:00:00Z',
+        name: 'ivysaur',
       },
     ];
 
@@ -96,7 +97,7 @@ describe('toCSV', () => {
   });
 
   it('escapes newlines and quotes in cells', async () => {
-    const rows = [{ text: 'hello\nworld', note: 'she said "hi"' }];
+    const rows = [{ note: 'she said "hi"', text: 'hello\nworld' }];
     toCSV(rows, 'x.csv');
     const text = await blobToText(lastBlob);
     const [header, ...rest] = text.split('\n');

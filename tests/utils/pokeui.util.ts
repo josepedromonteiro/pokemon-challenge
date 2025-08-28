@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import type { DeepPartial } from '@/types/deep-partial';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
+import type { DeepPartial } from '@/types/deep-partial';
+
+import { describe, it, expect } from 'vitest';
+
 import { toGridItem } from '@/utils/pokeui.utils.ts';
 
 describe('toGridItem', () => {
@@ -13,7 +15,7 @@ describe('toGridItem', () => {
       } as any,
     };
     const item = toGridItem(d);
-    expect(item).toEqual({ id: 6, name: 'charizard', image: 'art.png' });
+    expect(item).toEqual({ id: 6, image: 'art.png', name: 'charizard' });
   });
 
   it('falls back to front_default when official-artwork is missing', () => {

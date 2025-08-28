@@ -10,10 +10,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+
 import PokedexControls from '@/components/pokedex/PokedexControls.vue';
-import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
 import PokedexGrid from '@/components/pokedex/PokedexGrid.vue';
 import PokedexProgress from '@/components/pokedex/PokedexProgress.vue';
+import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
 
 const store = usePokedexViewStore();
 onMounted(() => {

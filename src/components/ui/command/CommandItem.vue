@@ -1,10 +1,36 @@
+<template>
+  <ListboxItem
+    v-if="isRender"
+    v-bind="forwarded"
+    :id="id"
+    ref="itemRef"
+    data-slot="command-item"
+    :class="
+      cn(
+        `relative flex cursor-default items-center gap-2 rounded-sm px-2 py-3 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground`,
+        props.class
+      )
+    "
+    @select="
+      () => {
+        filterState.search = '';
+      }
+    "
+  >
+    <slot />
+  </ListboxItem>
+</template>
+
 <script setup lang="ts">
 import type { ListboxItemEmits, ListboxItemProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
+
 import { reactiveOmit, useCurrentElement } from '@vueuse/core';
 import { ListboxItem, useForwardPropsEmits, useId } from 'reka-ui';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+
 import { cn } from '@/lib/utils';
+
 import { useCommand, useCommandGroup } from '.';
 
 const props = defineProps<
@@ -17,7 +43,7 @@ const delegatedProps = reactiveOmit(props, 'class');
 const forwarded = useForwardPropsEmits(delegatedProps, emits);
 
 const id = useId();
-const { filterState, allItems, allGroups } = useCommand();
+const { allGroups, allItems, filterState } = useCommand();
 const groupContext = useCommandGroup();
 
 const isRender = computed(() => {
@@ -60,26 +86,3 @@ onUnmounted(() => {
   allItems.value.delete(id);
 });
 </script>
-
-<template>
-  <ListboxItem
-    v-if="isRender"
-    v-bind="forwarded"
-    :id="id"
-    ref="itemRef"
-    data-slot="command-item"
-    :class="
-      cn(
-        `relative flex cursor-default items-center gap-2 rounded-sm px-2 py-3 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground`,
-        props.class
-      )
-    "
-    @select="
-      () => {
-        filterState.search = '';
-      }
-    "
-  >
-    <slot />
-  </ListboxItem>
-</template>

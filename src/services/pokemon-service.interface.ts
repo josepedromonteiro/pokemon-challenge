@@ -1,10 +1,10 @@
+import type { PokemonTypesResponse } from '@/models/api/poke-type.api.ts';
 import type {
   PokemonPagedResponse,
   PokemonSummary,
 } from '@/models/api/poke.api.ts';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
-import type { PokemonTypesResponse } from '@/models/api/poke-type.api.ts';
 
 export interface PokemonService {
   getAllPokemon(

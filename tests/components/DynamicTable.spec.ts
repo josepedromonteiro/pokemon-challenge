@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect } from 'vitest';
+
 import DynamicTable from '@/components/DynamicTable.vue';
 
 const Table = { template: '<table><slot /></table>' };
@@ -10,8 +11,8 @@ const TableBody = { template: '<tbody><slot /></tbody>' };
 const TableCell = { template: '<td><slot /></td>' };
 
 const Checkbox = {
-  props: ['checked', 'indeterminate'],
   emits: ['update:checked'],
+  props: ['checked', 'indeterminate'],
   template: `
       <input
           type="checkbox"
@@ -27,29 +28,29 @@ describe('DynamicTable', () => {
     { key: 'caughtAt', label: 'Caught at' },
   ];
   const rows = [
-    { id: 1, image: 'i1', name: 'Bulbasaur', caughtAt: '2020-01-01' },
-    { id: 2, image: 'i2', name: 'Ivysaur', caughtAt: '2020-01-02' },
-    { id: 3, image: 'i3', name: 'Venusaur', caughtAt: '2020-01-03' },
+    { caughtAt: '2020-01-01', id: 1, image: 'i1', name: 'Bulbasaur' },
+    { caughtAt: '2020-01-02', id: 2, image: 'i2', name: 'Ivysaur' },
+    { caughtAt: '2020-01-03', id: 3, image: 'i3', name: 'Venusaur' },
   ];
 
   // TODO - remove any
   const mountTable = (overrides: any = {}) =>
     mount(DynamicTable, {
-      props: {
-        rows,
-        columns,
-        ...overrides,
-      },
       global: {
         stubs: {
+          Checkbox,
           Table,
-          TableHeader,
-          TableRow,
-          TableHead,
           TableBody,
           TableCell,
-          Checkbox,
+          TableHead,
+          TableHeader,
+          TableRow,
         },
+      },
+      props: {
+        columns,
+        rows,
+        ...overrides,
       },
     });
 
@@ -77,7 +78,7 @@ describe('DynamicTable', () => {
   });
 
   it('applies selected row styling when id is in `selected`', () => {
-    const wrapper = mountTable({ selecting: true, selected: [2, 3] });
+    const wrapper = mountTable({ selected: [2, 3], selecting: true });
     const trs = wrapper.findAll('tbody tr');
     expect(trs[0].classes()).not.toContain('bg-muted/40');
     expect(trs[1].classes()).toContain('bg-muted/40');

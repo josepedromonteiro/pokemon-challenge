@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { computed } from 'vue';
+
 import { useSelection } from '@/composables/useSelection';
 
 describe('useSelection', () => {

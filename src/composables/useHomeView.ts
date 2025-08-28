@@ -1,21 +1,23 @@
+import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
+import type { DeepPartial } from '@/types/deep-partial';
+
 // TODO - Create tests
 import { ref, computed } from 'vue';
-import type { DeepPartial } from '@/types/deep-partial';
-import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
-import { pokeApiService } from '@/services/pokemon-api-service';
-import { toGridItem } from '@/utils/pokeui.utils';
+
 import {
   type GridItemData,
   mapToTableRowData,
   type TableRowData,
   type ViewMode,
 } from '@/models/poke-ui';
+import { pokeApiService } from '@/services/pokemon-api-service';
 import { usePokedexStore } from '@/stores/pokedex.store';
 import { useUI } from '@/stores/ui.store';
+import { toGridItem } from '@/utils/pokeui.utils';
 
 export function useHomeView() {
   const ui = useUI();
-  const { pokemonById, isCaught } = usePokedexStore();
+  const { isCaught, pokemonById } = usePokedexStore();
 
   const viewMode = computed<ViewMode>({
     get: () => ui.viewMode,
@@ -38,8 +40,8 @@ export function useHomeView() {
   const tableRows = computed<TableRowData[]>(() =>
     filtered.value.map((d) =>
       mapToTableRowData(d, {
-        isCaught: isCaught(d.id!),
         caughtAt: pokemonById(d.id!)?.caughtAt,
+        isCaught: isCaught(d.id!),
       })
     )
   );
@@ -71,10 +73,8 @@ export function useHomeView() {
         Boolean
       ) as DeepPartial<PokemonDetail>[];
       details.value = replace ? items : [...details.value, ...items];
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        error.value = 'Failed to load Pokémon.';
-      }
+    } catch {
+      error.value = 'Failed to load Pokémon.';
     } finally {
       loading.value = false;
     }
@@ -91,22 +91,22 @@ export function useHomeView() {
   };
 
   return {
+    canLoadMore,
     details,
-    total,
-    loading,
     error,
-    pageSize,
-    offset,
-    query,
-    viewMode,
-
     filtered,
     gridItems,
-    tableRows,
-    canLoadMore,
-
-    loadPage,
-    resetAndReload,
+    loading,
     loadMore,
+    loadPage,
+
+    offset,
+    pageSize,
+    query,
+    resetAndReload,
+
+    tableRows,
+    total,
+    viewMode,
   };
 }

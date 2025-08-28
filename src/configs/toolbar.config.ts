@@ -2,23 +2,23 @@ import type { Item } from '@/models/toolbar.ts';
 
 export const TABS: Item[] = [
   {
+    icon: {
+      alt: 'Pokeball',
+      src: 'images/pokemon.png',
+      type: 'image',
+    },
     key: 'home',
     label: 'Home',
-    icon: {
-      type: 'image',
-      src: 'images/pokemon.png',
-      alt: 'Pokeball',
-    },
     to: '/',
   },
   {
+    icon: {
+      alt: 'Pokeball',
+      src: 'images/pokedex.png',
+      type: 'image',
+    },
     key: 'pokedex',
     label: 'Pokédex',
-    icon: {
-      type: 'image',
-      src: 'images/pokedex.png',
-      alt: 'Pokeball',
-    },
     to: '/pokedex',
   },
 ];

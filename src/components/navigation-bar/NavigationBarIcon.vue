@@ -1,6 +1,6 @@
 <template>
   <span v-if="isString">{{ icon }}</span>
-  <component v-else-if="isComponent" :is="icon" />
+  <component :is="icon" v-else-if="isComponent" />
   <img
     v-else-if="isImage"
     :src="(icon as TabIconImage).src"
@@ -9,8 +9,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
 import type { TabIcon, TabIconImage } from '@/models/toolbar.ts';
+
+import { computed } from 'vue';
 
 const props = defineProps<{ icon: TabIcon }>();
 

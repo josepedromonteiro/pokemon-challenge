@@ -1,12 +1,12 @@
 <template>
   <section class="mx-auto max-w-4xl px-4 py-6">
     <PokemonDetailLayout
+      v-model:note="note"
       :loading="state.loading"
       :error="state.error"
       :pokemon="pokemon"
       :caught="caught"
-      :caughtAt="caughtAt"
-      v-model:note="note"
+      :caught-at="caughtAt"
       @toggle-caught="toggleCaught"
       @save-note="saveNote"
       @share="shareUsingWebApi"
@@ -41,30 +41,31 @@
 </template>
 
 <script setup lang="ts">
+import { Clipboard, Send, Share2 } from 'lucide-vue-next';
 import { onMounted, watch } from 'vue';
-import PokemonDetailLayout from '@/layouts/PokemonDetailLayout.vue';
+
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Clipboard, Send, Share2 } from 'lucide-vue-next';
 import { usePokemonDetailView } from '@/composables/usePokemonDetailView.ts';
+import PokemonDetailLayout from '@/layouts/PokemonDetailLayout.vue';
 
 const {
-  state,
-  pokemon,
-  note,
-  currentId,
   caught,
   caughtAt,
+  currentId,
+  loadPokemon,
+  note,
+  pokemon,
   saveNote,
-  toggleCaught,
   shareUsingClipBoard,
   shareUsingWebApi,
-  loadPokemon,
+  state,
+  toggleCaught,
 } = usePokemonDetailView();
 
 onMounted(() => {

@@ -54,11 +54,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineComponent } from 'vue';
-import NavigationBarIcon from '@/components/navigation-bar/NavigationBarIcon.vue';
 import type { Item } from '@/models/toolbar.ts';
+
 import { ArrowLeft } from 'lucide-vue-next';
+import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
+
+import NavigationBarIcon from '@/components/navigation-bar/NavigationBarIcon.vue';
 
 defineComponent({ name: 'NavigationBar' });
 
@@ -69,9 +71,9 @@ const props = withDefaults(
     disableBackButton?: boolean;
   }>(),
   {
+    disableBackButton: true,
     items: () => [],
     position: 'bottom',
-    disableBackButton: true,
   }
 );
 

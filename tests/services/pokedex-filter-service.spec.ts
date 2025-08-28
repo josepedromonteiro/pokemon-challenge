@@ -1,39 +1,41 @@
-import { describe, it, expect } from 'vitest';
 import type { PokedexEntry } from '@/models/pokedex';
+
+import { describe, it, expect } from 'vitest';
+
 import {
   type OrderByFields,
   PokedexFilterService,
 } from '@/services/pokedex-filter-service.ts';
 
 const sample = (override: Partial<PokedexEntry>): PokedexEntry => ({
-  id: 1,
-  name: 'bulbasaur',
-  image: '',
-  height: 7,
-  types: ['grass'],
   caughtAt: '2020-01-02T00:00:00Z',
+  height: 7,
+  id: 1,
+  image: '',
+  name: 'bulbasaur',
+  types: ['grass'],
   ...override,
 });
 
 describe('PokedexFilterService', () => {
   const data: PokedexEntry[] = [
     sample({
+      caughtAt: '2020-01-02T00:00:00Z',
+      height: 7,
       id: 1,
       name: 'Bulbasaur',
-      height: 7,
-      caughtAt: '2020-01-02T00:00:00Z',
     }),
     sample({
+      caughtAt: '2020-01-03T00:00:00Z',
+      height: 10,
       id: 2,
       name: 'Ivysaur',
-      height: 10,
-      caughtAt: '2020-01-03T00:00:00Z',
     }),
     sample({
+      caughtAt: '2020-01-01T00:00:00Z',
+      height: 20,
       id: 3,
       name: 'Venusaur',
-      height: 20,
-      caughtAt: '2020-01-01T00:00:00Z',
     }),
   ];
   const svc = new PokedexFilterService(() => data);
@@ -69,8 +71,8 @@ describe('PokedexFilterService', () => {
 
   it('handles missing/invalid fields', async () => {
     const svc3 = new PokedexFilterService(() => [
-      sample({ id: 1, name: 'A', height: 3 }),
-      sample({ id: 2, name: 'B', height: NaN }),
+      sample({ height: 3, id: 1, name: 'A' }),
+      sample({ height: NaN, id: 2, name: 'B' }),
     ]);
     const res = await svc3.list({ filter: {}, orderBy: 'height-asc' });
     expect(res.data.map((p) => p.id)).toEqual([2, 1]);

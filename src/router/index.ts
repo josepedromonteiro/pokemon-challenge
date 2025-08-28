@@ -6,39 +6,39 @@ import {
 
 export const ROUTE_NAMES = {
   home: 'home',
+  notFound: 'not-found',
   pokedex: 'pokedex',
   pokemonDetail: 'pokemon-detail',
-  notFound: 'not-found',
 } as const;
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    name: ROUTE_NAMES.home,
     component: () => import('@/views/HomeView.vue'), // lazy
     meta: { title: 'Home' },
+    name: ROUTE_NAMES.home,
+    path: '/',
   },
   {
-    path: '/pokedex',
-    name: ROUTE_NAMES.pokedex,
     component: () => import('@/views/PokedexView.vue'), // lazy
     meta: { title: 'My Pokédex' },
+    name: ROUTE_NAMES.pokedex,
+    path: '/pokedex',
   },
   {
-    path: '/pokemon/:id',
-    name: ROUTE_NAMES.pokemonDetail,
     component: () => import('@/views/PokemonDetailView.vue'), // lazy
+    meta: { title: 'Pokémon Details' },
+    name: ROUTE_NAMES.pokemonDetail,
+    path: '/pokemon/:id',
     props: (route) => {
       const id = Number(route.params.id);
       return Number.isFinite(id) && id > 0 ? { id } : { id: undefined };
     },
-    meta: { title: 'Pokémon Details' },
   },
   {
-    path: '/:pathMatch(.*)*',
-    name: ROUTE_NAMES.notFound,
     component: () => import('@/views/NotFoundView.vue'),
     meta: { title: 'Not Found' },
+    name: ROUTE_NAMES.notFound,
+    path: '/:pathMatch(.*)*',
   },
 ];
 

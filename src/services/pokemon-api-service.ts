@@ -1,13 +1,14 @@
-import { createHttpClient } from '@/services/http-client.ts';
-import type { HttpClient } from '@/types/http.ts';
-import type { PokemonDetail } from '@/models/api/pokemon-detail.api.ts';
 import type { PokemonTypesResponse } from '@/models/api/poke-type.api.ts';
 import type {
   PokemonPagedResponse,
   PokemonSummary,
 } from '@/models/api/poke.api.ts';
+import type { PokemonDetail } from '@/models/api/pokemon-detail.api.ts';
 import type { PokemonService } from '@/services/pokemon-service.interface.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
+import type { HttpClient } from '@/types/http.ts';
+
+import { createHttpClient } from '@/services/http-client.ts';
 
 export class PokemonApiService implements PokemonService {
   private readonly httpClient: HttpClient;

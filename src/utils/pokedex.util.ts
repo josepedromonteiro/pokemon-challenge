@@ -12,13 +12,13 @@ export const mapPokemonDetailsToPokedexEntry = (
   details: DeepPartial<PokemonDetail>
 ): PokedexEntryData => {
   return {
+    height: details.height ?? 0,
     id: details.id!,
-    name: details.name ?? '',
     image:
       details.sprites?.other?.['official-artwork']?.front_default ||
       details.sprites?.front_default ||
       '',
-    height: details.height ?? 0,
+    name: details.name ?? '',
     types: mapPokemonTypeToString(details.types ?? []),
   };
 };

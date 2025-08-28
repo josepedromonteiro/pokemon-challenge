@@ -13,7 +13,11 @@ export const useSelection = <T extends AvailableTypes = number>() => {
 
   const toggleSelect = (id: T) => {
     const next = new Set<T>(selected.value as Set<T>);
-    next.has(id) ? next.delete(id) : next.add(id);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
     selected.value = next;
   };
 
@@ -26,11 +30,11 @@ export const useSelection = <T extends AvailableTypes = number>() => {
   };
 
   return {
-    selecting,
-    selected,
-    toggleSelecting,
-    toggleSelect,
-    selectAll,
     clear,
+    selectAll,
+    selected,
+    selecting,
+    toggleSelect,
+    toggleSelecting,
   };
 };

@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
+
 import PokemonLayoutSwitcher, {
   type PokemonLayoutSwitcherProps,
 } from '@/layouts/PokemonLayoutSwitcher.vue';
@@ -20,33 +21,33 @@ const TableStub = {
 
 describe('PokemonListWrapper', () => {
   const baseProps: PokemonLayoutSwitcherProps = {
-    viewMode: 'grid' as const,
-    gridItems: [{ id: 1, name: 'pikachu', image: 'x' }],
+    error: null as string | null,
+    gridItems: [{ id: 1, image: 'x', name: 'pikachu' }],
+    loading: false,
     tableRows: [
       {
-        id: 1,
-        name: 'pikachu',
-        height: 4,
-        weight: 60,
-        hp: 10,
         attack: 10,
+        caughtAt: new Date().toISOString(),
         defense: 10,
+        height: 4,
+        hp: 10,
+        id: 1,
+        isCaught: true,
+        name: 'pikachu',
         specialAttack: 10,
         specialDefense: 10,
         speed: 10,
         types: ['electric'],
-        caughtAt: new Date().toISOString(),
-        isCaught: true,
+        weight: 60,
       },
     ],
-    loading: false,
-    error: null as string | null,
+    viewMode: 'grid' as const,
   };
 
   it('renders Grid when viewMode = grid', () => {
     const wrapper = mount(PokemonLayoutSwitcher, {
-      props: baseProps,
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: baseProps,
     });
     expect(wrapper.find('[data-testid="grid"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="table"]').exists()).toBe(false);
@@ -54,8 +55,8 @@ describe('PokemonListWrapper', () => {
 
   it('renders Table when viewMode != grid', () => {
     const wrapper = mount(PokemonLayoutSwitcher, {
-      props: { ...baseProps, viewMode: 'table' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: { ...baseProps, viewMode: 'table' },
     });
     expect(wrapper.find('[data-testid="table"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="grid"]').exists()).toBe(false);
@@ -64,23 +65,23 @@ describe('PokemonListWrapper', () => {
   it('passes loading to Grid and pushing to Table', async () => {
     // Grid case
     const w1 = mount(PokemonLayoutSwitcher, {
-      props: { ...baseProps, loading: true, viewMode: 'grid' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: { ...baseProps, loading: true, viewMode: 'grid' },
     });
     expect(w1.getComponent(GridStub).props('loading')).toBe(true);
 
     // Table case
     const w2 = mount(PokemonLayoutSwitcher, {
-      props: { ...baseProps, loading: true, viewMode: 'table' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: { ...baseProps, loading: true, viewMode: 'table' },
     });
     expect(w2.getComponent(TableStub).props('pushing')).toBe(true);
   });
 
   it('emits load-more with correct mode from Grid', async () => {
     const wrapper = mount(PokemonLayoutSwitcher, {
-      props: { ...baseProps, viewMode: 'grid' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: { ...baseProps, viewMode: 'grid' },
     });
     await wrapper.get('[data-testid="grid"]').trigger('click');
     expect(wrapper.emitted('load-more')?.[0]).toEqual(['grid']);
@@ -88,8 +89,8 @@ describe('PokemonListWrapper', () => {
 
   it('emits load-more with correct mode from Table', async () => {
     const wrapper = mount(PokemonLayoutSwitcher, {
-      props: { ...baseProps, viewMode: 'table' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: { ...baseProps, viewMode: 'table' },
     });
     await wrapper.get('[data-testid="table"]').trigger('click');
     expect(wrapper.emitted('load-more')?.[0]).toEqual(['table']);
@@ -97,8 +98,8 @@ describe('PokemonListWrapper', () => {
 
   it('renders error when provided', () => {
     const wrapper = mount(PokemonLayoutSwitcher, {
-      props: { ...baseProps, error: 'Noooooo' },
       global: { stubs: { PokemonGrid: GridStub, PokemonTable: TableStub } },
+      props: { ...baseProps, error: 'Noooooo' },
     });
     expect(wrapper.text()).toContain('Noooooo');
   });

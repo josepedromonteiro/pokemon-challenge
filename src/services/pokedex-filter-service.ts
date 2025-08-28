@@ -1,7 +1,8 @@
-import type { FilterService } from '@/services/filter-service.interface.ts';
-import type { PokedexEntry } from '@/models/pokedex.ts';
-import { normalizeDate } from '@vueuse/core';
 import type { Query } from '@/models/filters.ts';
+import type { PokedexEntry } from '@/models/pokedex.ts';
+import type { FilterService } from '@/services/filter-service.interface.ts';
+
+import { normalizeDate } from '@vueuse/core';
 
 export type Filters = 'name' | 'types';
 export type OrderByFields = 'height-asc' | 'height-desc' | 'oldest' | 'newest';

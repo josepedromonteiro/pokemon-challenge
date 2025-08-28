@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-import { cn } from '@/lib/utils';
-
-const props = defineProps<{
-  class?: HTMLAttributes['class'];
-}>();
-</script>
-
 <template>
   <th
     data-slot="table-head"
@@ -20,3 +11,13 @@ const props = defineProps<{
     <slot />
   </th>
 </template>
+
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue';
+
+import { cn } from '@/lib/utils';
+
+const props = defineProps<{
+  class?: HTMLAttributes['class'];
+}>();
+</script>

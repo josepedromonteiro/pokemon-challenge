@@ -2,14 +2,14 @@
   <div class="grid">
     <PokemonCard
       v-for="p in filtered"
-      :key="p.id"
       :id="p.id"
+      :key="p.id"
       :name="p.name"
       :image="p.image"
       :caught="true"
       :selecting="selecting"
       :selected="store.isSelected(p.id)"
-      @onSelect="store.toggleSelected(p.id)"
+      @on-select="store.toggleSelected(p.id)"
       @toggle-caught="toggle({ id: p.id })"
     />
     <template v-if="loading">
@@ -19,14 +19,16 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
-import PokemonCard from '@/components/PokemonCard.vue';
-import { ref, watch } from 'vue';
-import { PokedexFilterService } from '@/services/pokedex-filter-service.ts';
 import type { PokedexEntry } from '@/models/pokedex.ts';
+
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
+
 import GridLoaderContent from '@/components/GridLoaderContent.vue';
+import PokemonCard from '@/components/PokemonCard.vue';
+import { PokedexFilterService } from '@/services/pokedex-filter-service.ts';
 import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
+import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 const store = usePokedexViewStore();
@@ -49,7 +51,7 @@ const loadPokedex = async () => {
   try {
     const result = await pokedexFilterService.list(pokedexQuery.query);
     filtered.value = result.data;
-  } catch (e) {
+  } catch {
     error.value = true;
   } finally {
     loading.value = false;

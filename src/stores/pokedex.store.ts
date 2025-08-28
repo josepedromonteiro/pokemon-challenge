@@ -1,5 +1,3 @@
-import { defineStore } from 'pinia';
-import { ref, computed, type Ref } from 'vue';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
 import type {
   PokedexEntry,
@@ -7,12 +5,16 @@ import type {
   PokedexId,
 } from '@/models/pokedex';
 import type { PokedexStore } from '@/services/pokedex-store.interface';
-import { LocalStoragePokedexStore } from '@/services/pokedex-local-storage';
-import { artwork, mapPokemonTypeToString } from '@/utils/pokedex.util';
-import { pokeApiService } from '@/services/pokemon-api-service';
 import type { PokemonService } from '@/services/pokemon-service.interface.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
+
+import { defineStore } from 'pinia';
+import { ref, computed, type Ref } from 'vue';
+
+import { LocalStoragePokedexStore } from '@/services/pokedex-local-storage';
+import { pokeApiService } from '@/services/pokemon-api-service';
 import { toCSV } from '@/utils/csv.util.ts';
+import { artwork, mapPokemonTypeToString } from '@/utils/pokedex.util';
 
 // TODO - Move types
 type Status = 'idle' | 'loading' | 'ready' | 'error';
@@ -96,11 +98,11 @@ export const usePokedexStore = defineStore('pokedex', () => {
     }
 
     const entry: PokedexEntry = {
-      id,
-      name: detail?.name ?? `#${id}`,
-      image: artwork(id),
       caughtAt: now,
       height: detail?.height ?? 0,
+      id,
+      image: artwork(id),
+      name: detail?.name ?? `#${id}`,
       types: mapPokemonTypeToString(detail?.types ?? []),
     };
 
@@ -160,9 +162,9 @@ export const usePokedexStore = defineStore('pokedex', () => {
         : pokemons.value;
 
     const rows = list.map((i) => ({
+      caughtAt: i.caughtAt ?? '',
       id: i.id,
       name: i.name,
-      caughtAt: i.caughtAt ?? '',
       note: i.note ?? '',
     }));
 
@@ -175,20 +177,20 @@ export const usePokedexStore = defineStore('pokedex', () => {
   };
 
   return {
-    setDependencies,
-    status,
+    catchOne,
+    count,
     error,
+    exportCSV,
+    isCaught,
+    load,
+    pokemonById,
     pokemonMap,
     pokemons,
-    count,
-    isCaught,
-    pokemonById,
-    load,
-    save,
-    catchOne,
     release,
-    toggle,
+    save,
+    setDependencies,
     setNote,
-    exportCSV,
+    status,
+    toggle,
   };
 });

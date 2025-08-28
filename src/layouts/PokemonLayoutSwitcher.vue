@@ -1,23 +1,3 @@
-<script setup lang="ts">
-import PokemonGrid from '@/components/PokemonGrid.vue';
-import type { GridItemData, TableRowData, ViewMode } from '@/models/poke-ui.ts';
-import PokemonTable from '@/components/PokemonTable.vue';
-
-export interface PokemonLayoutSwitcherProps {
-  viewMode: ViewMode;
-  gridItems?: GridItemData[];
-  tableRows?: TableRowData[];
-  loading: boolean;
-  error?: string | null;
-}
-const props = defineProps<PokemonLayoutSwitcherProps>();
-
-const emit = defineEmits<{
-  (e: 'load-more', mode: 'grid' | 'table'): void;
-  (e: 'update:viewMode', value: ViewMode): void;
-}>();
-</script>
-
 <template>
   <section class="list-wrapper">
     <p v-if="error" class="error">{{ error }}</p>
@@ -36,6 +16,27 @@ const emit = defineEmits<{
     />
   </section>
 </template>
+
+<script setup lang="ts">
+import type { GridItemData, TableRowData, ViewMode } from '@/models/poke-ui.ts';
+
+import PokemonGrid from '@/components/PokemonGrid.vue';
+import PokemonTable from '@/components/PokemonTable.vue';
+
+export interface PokemonLayoutSwitcherProps {
+  viewMode: ViewMode;
+  gridItems?: GridItemData[];
+  tableRows?: TableRowData[];
+  loading: boolean;
+  error?: string | null;
+}
+const props = defineProps<PokemonLayoutSwitcherProps>();
+
+const emit = defineEmits<{
+  (e: 'load-more', mode: 'grid' | 'table'): void;
+  (e: 'update:viewMode', value: ViewMode): void;
+}>();
+</script>
 
 <style>
 @reference "@/index.css";

@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { useUI } from '@/stores/ui.store';
 
 const STORAGE_KEY = 'ui:viewMode';

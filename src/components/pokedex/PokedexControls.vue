@@ -2,7 +2,7 @@
   <div class="toolbar controls">
     <div class="controls-left">
       <h1 class="controls-title">My Pokédex</h1>
-      <p class="controls-meta" v-if="nEntries">
+      <p v-if="nEntries" class="controls-meta">
         Caught: <b>{{ nEntries }}</b>
       </p>
     </div>
@@ -81,23 +81,9 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { Button } from '@/components/ui/button';
-import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
-import { type OrderByFields } from '@/services/pokedex-filter-service.ts';
 import { computed, onMounted, ref, watch } from 'vue';
 
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectItem,
-  SelectValue,
-} from '@/components/ui/select';
 import MultiSelect from '@/components/MultiSelect.vue';
-import { Input } from '@/components/ui/input';
-import { pokeApiService } from '@/services/pokemon-api-service.ts';
-import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
-import { usePokedexStore } from '@/stores/pokedex.store.ts';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -108,16 +94,30 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
+import { type OrderByFields } from '@/services/pokedex-filter-service.ts';
+import { pokeApiService } from '@/services/pokemon-api-service.ts';
+import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
+import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
+import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 const AVAILABLE_SORT_OPTIONS: Record<OrderByFields, string> = {
   'height-asc': 'Height ↑',
   'height-desc': 'Height ↓',
-  oldest: 'Oldest',
   newest: 'Newest',
+  oldest: 'Oldest',
 };
 
 const pokedexViewStore = usePokedexViewStore();
-const { selecting, selected } = storeToRefs(pokedexViewStore);
+const { selected, selecting } = storeToRefs(pokedexViewStore);
 
 const pokedexQuery = usePokedexQuery();
 const pokedexStore = usePokedexStore();

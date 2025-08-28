@@ -1,3 +1,4 @@
+<!--TODO - Explore using useSelect composable-->
 <template>
   <Popover v-model:open="open">
     <PopoverTrigger as-child>
@@ -44,8 +45,8 @@
               v-for="opt in filteredOptions"
               :key="opt.value"
               :value="opt.label"
-              @select="toggle(opt.value)"
               class="flex items-center"
+              @select="toggle(opt.value)"
             >
               <Checkbox
                 class="mr-2"
@@ -62,8 +63,8 @@
         <Button
           variant="ghost"
           size="sm"
-          @click="clear"
           :disabled="!selected.size"
+          @click="clear"
           >Clear</Button
         >
         <div class="flex items-center gap-2">
@@ -78,14 +79,12 @@
 </template>
 
 <script setup lang="ts">
+import { ChevronsUpDown } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
-import { Button } from '@/components/ui/button';
+
 import { Badge } from '@/components/ui/badge';
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Command,
   CommandInput,
@@ -94,8 +93,11 @@ import {
   CommandItem,
   CommandGroup,
 } from '@/components/ui/command';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronsUpDown } from 'lucide-vue-next';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
 
 // TODO - Move type declarations to a separate file
 
@@ -113,12 +115,12 @@ const props = withDefaults(
     maxTags?: number;
   }>(),
   {
-    placeholder: 'Select…',
-    searchPlaceholder: 'Search…',
-    disabled: false,
     clearable: true,
-    searchable: true,
+    disabled: false,
     maxTags: 1,
+    placeholder: 'Select…',
+    searchable: true,
+    searchPlaceholder: 'Search…',
   }
 );
 
@@ -150,7 +152,13 @@ const filteredOptions = computed(() => props.options);
 
 const toggle = (value: string) => {
   const s = new Set(selected.value);
-  s.has(value) ? s.delete(value) : s.add(value);
+
+  if (s.has(value)) {
+    s.delete(value);
+  } else {
+    s.add(value);
+  }
+
   const next = [...s];
   emit('update:modelValue', next);
   emit('change', next);

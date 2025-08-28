@@ -73,13 +73,13 @@
         <textarea
           id="note"
           :value="note"
+          class="note-textarea"
+          rows="3"
+          placeholder="Add a personal note…"
           @input="
             $emit('update:note', ($event.target as HTMLTextAreaElement).value)
           "
           @blur="$emit('save-note')"
-          class="note-textarea"
-          rows="3"
-          placeholder="Add a personal note…"
         />
         <div class="note-hint">Saved automatically on blur.</div>
       </div>
@@ -88,13 +88,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
-import { Button } from '@/components/ui/button';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
-import PokemonDetailLayoutLoading from '@/layouts/PokemonDetailLayoutLoading.vue';
-import ProgressBar from '@/components/ProgressBar.vue';
-import { onImgError } from '@/utils/image.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
+
+import { ref, watch, onMounted, computed } from 'vue';
+
+import ProgressBar from '@/components/ProgressBar.vue';
+import { Button } from '@/components/ui/button';
+import PokemonDetailLayoutLoading from '@/layouts/PokemonDetailLayoutLoading.vue';
+import { onImgError } from '@/utils/image.ts';
 
 // Based on https://bulbapedia.bulbagarden.net/wiki/Base_stats
 const STAT_CAP = 255;
@@ -109,10 +111,12 @@ const props = withDefaults(
     note?: string;
   }>(),
   {
-    loading: undefined,
-    error: false,
     caught: false,
+    caughtAt: undefined,
+    error: false,
+    loading: undefined,
     note: '',
+    pokemon: undefined,
   }
 );
 
@@ -163,8 +167,8 @@ const setupCapabilities = () => {
       return {
         key: s.stat?.name ?? `${index}`,
         label: labelize(s.stat?.name ?? ''),
-        value,
         pct: Math.round((value / STAT_CAP) * 100),
+        value,
       };
     }) ?? [];
 };

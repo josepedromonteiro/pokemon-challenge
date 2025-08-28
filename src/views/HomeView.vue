@@ -3,11 +3,11 @@
     <ControlsBar v-model="query" />
 
     <div class="mt-2 flex">
-      <div class="status" v-if="!loading && !error">
+      <div v-if="!loading && !error" class="status">
         Showing <b>{{ gridItems.length }}</b> of <b>{{ total }}</b>
       </div>
 
-      <Tabs class="tabs" v-model="viewMode">
+      <Tabs v-model="viewMode" class="tabs">
         <TabsList>
           <TabsTrigger value="grid">
             <GridIcon />
@@ -38,26 +38,27 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useHomeView } from '@/composables/useHomeView';
-import ControlsBar from '@/components/ControlsBar.vue';
-import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
-import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import { GridIcon, TableIcon } from 'lucide-vue-next';
+import { onMounted } from 'vue';
+
+import ControlsBar from '@/components/ControlsBar.vue';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
+import { useHomeView } from '@/composables/useHomeView';
+import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
 
 const {
-  query,
-  total,
-  loading,
-  error,
-  viewMode,
-  gridItems,
-  tableRows,
   canLoadMore,
-  loadPage,
-  resetAndReload,
+  error,
+  gridItems,
+  loading,
   loadMore,
+  loadPage,
+  query,
+  resetAndReload,
+  tableRows,
+  total,
+  viewMode,
 } = useHomeView();
 
 onMounted(() => {

@@ -84,14 +84,14 @@ export const usePokedexQuery = defineStore('pokedexQuery', () => {
   );
 
   return {
+    clearFilters,
     filter,
     orderBy,
     query,
     queryString,
-    setFilter,
     removeFilter,
-    clearFilters,
-    setOrderBy,
     reset,
+    setFilter,
+    setOrderBy,
   };
 });

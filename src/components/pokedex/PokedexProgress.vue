@@ -12,8 +12,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { pokeApiService } from '@/services/pokemon-api-service.ts';
+
 import ProgressBar from '@/components/ProgressBar.vue';
+import { pokeApiService } from '@/services/pokemon-api-service.ts';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 const { pokemons } = usePokedexStore();

@@ -1,11 +1,26 @@
+<template>
+  <Primitive
+    data-slot="button"
+    :as="Comp"
+    :as-child="asChild"
+    v-bind="linkBind"
+    :class="cn(buttonVariants({ variant, size }), props.class)"
+  >
+    <slot />
+  </Primitive>
+</template>
+
 <script setup lang="ts">
-import { computed } from 'vue';
-import { Primitive, type PrimitiveProps } from 'reka-ui';
-import type { HTMLAttributes } from 'vue';
 import type { ButtonVariants } from '.';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '.';
+import type { HTMLAttributes } from 'vue';
+
+import { Primitive, type PrimitiveProps } from 'reka-ui';
+import { computed } from 'vue';
 import { RouterLink, type RouteLocationRaw } from 'vue-router';
+
+import { cn } from '@/lib/utils';
+
+import { buttonVariants } from '.';
 
 interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant'];
@@ -27,23 +42,11 @@ const Comp = computed(() => (props.to ? RouterLink : props.as));
 const linkBind = computed(() =>
   props.to
     ? {
-        to: props.to,
-        replace: props.replace,
         activeClass: props.activeClass,
         exactActiveClass: props.exactActiveClass,
+        replace: props.replace,
+        to: props.to,
       }
     : {}
 );
 </script>
-
-<template>
-  <Primitive
-    data-slot="button"
-    :as="Comp"
-    :as-child="asChild"
-    v-bind="linkBind"
-    :class="cn(buttonVariants({ variant, size }), props.class)"
-  >
-    <slot />
-  </Primitive>
-</template>

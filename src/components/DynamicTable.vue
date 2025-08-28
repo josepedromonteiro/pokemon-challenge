@@ -53,11 +53,13 @@
             </slot>
           </TableCell>
         </TableRow>
-        <TableRow v-if="showPushLoader" v-for="i in 6" :key="'push-' + i">
-          <TableCell :colspan="colspan" class="py-2">
-            <div class="h-8 w-full animate-pulse rounded bg-muted/60"></div>
-          </TableCell>
-        </TableRow>
+        <template v-if="showPushLoader">
+          <TableRow v-for="i in 6" :key="'push-' + i">
+            <TableCell :colspan="colspan" class="py-2">
+              <div class="h-8 w-full animate-pulse rounded bg-muted/60"></div>
+            </TableCell>
+          </TableRow>
+        </template>
       </TableBody>
 
       <!--      Loaiding-->
@@ -129,14 +131,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from '@/components/ui/table';
+
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Pagination,
@@ -146,6 +141,14 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from '@/components/ui/pagination';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
 
 // TODO - Move type declarations
 export interface DynamicTableProps {

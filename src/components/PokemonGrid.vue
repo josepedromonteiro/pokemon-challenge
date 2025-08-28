@@ -2,8 +2,8 @@
   <div class="grid">
     <PokemonCard
       v-for="p in items"
-      :key="p.id"
       :id="p.id"
+      :key="p.id"
       :name="p.name"
       :image="p.image"
       :caught="isCaught(p.id)"
@@ -16,10 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import PokemonCard from './PokemonCard.vue';
-import GridLoaderContent from '@/components/GridLoaderContent.vue';
 import type { GridItemData } from '@/models/poke-ui.ts';
+
+import GridLoaderContent from '@/components/GridLoaderContent.vue';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
+
+import PokemonCard from './PokemonCard.vue';
 
 defineProps<{
   items: GridItemData[];

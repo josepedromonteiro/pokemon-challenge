@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createPinia, setActivePinia } from 'pinia';
-import { usePokedexStore } from '@/stores/pokedex.store';
+import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
 import type { PokedexEntry, PokedexId } from '@/models/pokedex';
 import type { PokedexStore } from '@/services/pokedex-store.interface';
-import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
+
+import { createPinia, setActivePinia } from 'pinia';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+import { usePokedexStore } from '@/stores/pokedex.store';
 
 class MemoryStore implements PokedexStore {
   private data: Record<PokedexId, PokedexEntry>;
@@ -50,17 +52,17 @@ const detail = (
   types = ['electric']
 ) =>
   ({
+    height,
     id,
     name,
-    height,
-    types: types.map((t: string, i: number) => ({
-      slot: i + 1,
-      type: { name: t, url: '' },
-    })),
     sprites: {
       front_default: null,
       other: { 'official-artwork': { front_default: null } },
     },
+    types: types.map((t: string, i: number) => ({
+      slot: i + 1,
+      type: { name: t, url: '' },
+    })),
   }) as unknown as PokemonDetail;
 
 describe('usePokedexStore', () => {
@@ -71,12 +73,12 @@ describe('usePokedexStore', () => {
   it('loads from persistence and sets status', async () => {
     const seed: Record<PokedexId, PokedexEntry> = {
       25: {
-        id: 25,
-        name: 'pikachu',
-        image: 'img',
-        height: 4,
-        types: ['electric'],
         caughtAt: 't0',
+        height: 4,
+        id: 25,
+        image: 'img',
+        name: 'pikachu',
+        types: ['electric'],
       },
     };
     const mem = new MemoryStore(seed);
@@ -98,10 +100,10 @@ describe('usePokedexStore', () => {
     const nowBefore = Date.now();
     const entry = await dex.catchOne({
       entry: {
-        id: 1,
-        name: 'bulbasaur',
-        image: 'i',
         height: 7,
+        id: 1,
+        image: 'i',
+        name: 'bulbasaur',
         types: ['grass'],
       },
     });
@@ -123,7 +125,7 @@ describe('usePokedexStore', () => {
         detail(id, 'charmander', 6, ['fire']),
     });
     const dex = usePokedexStore();
-    dex.setDependencies({ store: mem, api: api as any });
+    dex.setDependencies({ api: api as any, store: mem });
 
     const e = await dex.catchOne({ id: 4 });
     expect(api.getPokemonById).toHaveBeenCalledWith(4);
@@ -140,7 +142,7 @@ describe('usePokedexStore', () => {
       },
     });
     const dex = usePokedexStore();
-    dex.setDependencies({ store: mem, api: api as any });
+    dex.setDependencies({ api: api as any, store: mem });
 
     const e = await dex.catchOne({ id: 99 });
     expect(e.id).toBe(99);
@@ -155,10 +157,10 @@ describe('usePokedexStore', () => {
     dex.setDependencies({ store: mem });
 
     await dex.catchOne({
-      entry: { id: 1, name: 'a', image: 'i', height: 1, types: [] },
+      entry: { height: 1, id: 1, image: 'i', name: 'a', types: [] },
     });
     await dex.catchOne({
-      entry: { id: 2, name: 'b', image: 'i', height: 1, types: [] },
+      entry: { height: 1, id: 2, image: 'i', name: 'b', types: [] },
     });
     expect(dex.pokemons.map((p) => p.id)).toEqual([1, 2]);
 
@@ -184,12 +186,12 @@ describe('usePokedexStore', () => {
   it('setNote delegates to store and mirrors in local map', async () => {
     const mem = new MemoryStore({
       7: {
-        id: 7,
-        name: 'squirtle',
-        image: 'i',
-        height: 5,
-        types: ['water'],
         caughtAt: 't0',
+        height: 5,
+        id: 7,
+        image: 'i',
+        name: 'squirtle',
+        types: ['water'],
       },
     });
     const dex = usePokedexStore();

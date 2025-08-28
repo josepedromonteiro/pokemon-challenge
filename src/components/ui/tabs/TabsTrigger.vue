@@ -1,19 +1,3 @@
-<script setup lang="ts">
-import type { TabsTriggerProps } from 'reka-ui';
-import type { HTMLAttributes } from 'vue';
-import { reactiveOmit } from '@vueuse/core';
-import { TabsTrigger, useForwardProps } from 'reka-ui';
-import { cn } from '@/lib/utils';
-
-const props = defineProps<
-  TabsTriggerProps & { class?: HTMLAttributes['class'] }
->();
-
-const delegatedProps = reactiveOmit(props, 'class');
-
-const forwardedProps = useForwardProps(delegatedProps);
-</script>
-
 <template>
   <TabsTrigger
     data-slot="tabs-trigger"
@@ -28,3 +12,21 @@ const forwardedProps = useForwardProps(delegatedProps);
     <slot />
   </TabsTrigger>
 </template>
+
+<script setup lang="ts">
+import type { TabsTriggerProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
+
+import { reactiveOmit } from '@vueuse/core';
+import { TabsTrigger, useForwardProps } from 'reka-ui';
+
+import { cn } from '@/lib/utils';
+
+const props = defineProps<
+  TabsTriggerProps & { class?: HTMLAttributes['class'] }
+>();
+
+const delegatedProps = reactiveOmit(props, 'class');
+
+const forwardedProps = useForwardProps(delegatedProps);
+</script>

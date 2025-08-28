@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ref } from 'vue';
 
 const mockPokemons = ref<any[]>([]);
@@ -10,10 +10,10 @@ const toggleSpy = vi.fn();
 
 vi.mock('@/stores/pokedex.store.ts', () => ({
   usePokedexStore: () => ({
-    pokemons: mockPokemons,
-    status: mockStatus,
-    release: releaseSpy,
     load: loadSpy,
+    pokemons: mockPokemons,
+    release: releaseSpy,
+    status: mockStatus,
     toggle: toggleSpy,
   }),
 }));

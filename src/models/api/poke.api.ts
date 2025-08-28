@@ -1,5 +1,5 @@
-import type { DeepPartial } from '@/types/deep-partial.ts';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api.ts';
+import type { DeepPartial } from '@/types/deep-partial.ts';
 
 export type PokemonId = number;
 export type PokemonSummary = { name: string; url: string };

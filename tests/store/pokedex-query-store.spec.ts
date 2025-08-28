@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
+import { describe, it, expect, beforeEach } from 'vitest';
+
 import { usePokedexQuery } from '@/stores/pokedex-query.store';
 
 function toParamMap(qs: string) {

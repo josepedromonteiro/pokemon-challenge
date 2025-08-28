@@ -1,10 +1,31 @@
+<template>
+  <ListboxGroup
+    v-bind="delegatedProps"
+    :id="id"
+    data-slot="command-group"
+    :class="cn('overflow-hidden p-1 text-foreground', props.class)"
+    :hidden="isRender ? undefined : true"
+  >
+    <ListboxGroupLabel
+      v-if="heading"
+      class="px-2 py-1.5 text-xs font-medium text-muted-foreground"
+    >
+      {{ heading }}
+    </ListboxGroupLabel>
+    <slot />
+  </ListboxGroup>
+</template>
+
 <script setup lang="ts">
 import type { ListboxGroupProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
+
 import { reactiveOmit } from '@vueuse/core';
 import { ListboxGroup, ListboxGroupLabel, useId } from 'reka-ui';
 import { computed, onMounted, onUnmounted } from 'vue';
+
 import { cn } from '@/lib/utils';
+
 import { provideCommandGroupContext, useCommand } from '.';
 
 const props = defineProps<
@@ -31,21 +52,3 @@ onUnmounted(() => {
   allGroups.value.delete(id);
 });
 </script>
-
-<template>
-  <ListboxGroup
-    v-bind="delegatedProps"
-    :id="id"
-    data-slot="command-group"
-    :class="cn('overflow-hidden p-1 text-foreground', props.class)"
-    :hidden="isRender ? undefined : true"
-  >
-    <ListboxGroupLabel
-      v-if="heading"
-      class="px-2 py-1.5 text-xs font-medium text-muted-foreground"
-    >
-      {{ heading }}
-    </ListboxGroupLabel>
-    <slot />
-  </ListboxGroup>
-</template>

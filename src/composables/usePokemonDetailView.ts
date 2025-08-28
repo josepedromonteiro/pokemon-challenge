@@ -1,15 +1,17 @@
+import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
+import type { PokedexEntry } from '@/models/pokedex';
+import type { DeepPartial } from '@/types/deep-partial';
+import type { ComputedRef } from 'vue';
+
+import { normalizeDate } from '@vueuse/core';
 // TODO - Create tests
 import { computed, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import type { ComputedRef } from 'vue';
-import type { DeepPartial } from '@/types/deep-partial';
-import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
-import type { PokedexEntry } from '@/models/pokedex';
-import { normalizeDate } from '@vueuse/core';
+import { toast } from 'vue-sonner';
+
 import { pokeApiService } from '@/services/pokemon-api-service';
 import { usePokedexStore } from '@/stores/pokedex.store';
 import { mapPokemonDetailsToPokedexEntry } from '@/utils/pokedex.util';
-import { toast } from 'vue-sonner';
 
 type DetailState = {
   loading: boolean;
@@ -18,7 +20,7 @@ type DetailState = {
 
 export const usePokemonDetailView = () => {
   const route = useRoute();
-  const { isCaught, setNote, pokemonById, toggle } = usePokedexStore();
+  const { isCaught, pokemonById, setNote, toggle } = usePokedexStore();
 
   const currentId: ComputedRef<number | null> = computed(() => {
     const raw = String(route.params.id ?? '');
@@ -38,7 +40,7 @@ export const usePokemonDetailView = () => {
       : undefined
   );
 
-  const state = reactive<DetailState>({ loading: false, error: false });
+  const state = reactive<DetailState>({ error: false, loading: false });
   const pokemon = ref<DeepPartial<PokemonDetail> | undefined>(undefined);
 
   const note = ref<string>(pokemonInDex.value?.note ?? '');
@@ -67,10 +69,10 @@ export const usePokemonDetailView = () => {
       const url = location.href;
       const title =
         currentId.value != null ? `#${currentId.value} Pokémon` : 'Pokémon';
-      if (typeof navigator !== 'undefined' && (navigator as any).share) {
-        await (navigator as any).share({
-          title,
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share({
           text: 'Check out this Pokémon!',
+          title,
           url,
         });
         toast.success('Link successfully shared!');
@@ -105,17 +107,17 @@ export const usePokemonDetailView = () => {
   );
 
   return {
-    state,
-    pokemon,
-    note,
-    currentId,
-    pokemonInDex,
     caught,
     caughtAt,
+    currentId,
+    loadPokemon,
+    note,
+    pokemon,
+    pokemonInDex,
     saveNote,
-    toggleCaught,
     shareUsingClipBoard,
     shareUsingWebApi,
-    loadPokemon,
+    state,
+    toggleCaught,
   };
 };

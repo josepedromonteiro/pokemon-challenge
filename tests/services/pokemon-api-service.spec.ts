@@ -1,13 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
 import type { HttpClient } from '@/types/http';
+
+import { describe, it, expect, vi } from 'vitest';
+
 import { PokemonApiService } from '@/services/pokemon-api-service.ts';
 
 const mockHttp = (): HttpClient => ({
+  delete: vi.fn(),
   get: vi.fn(),
+  patch: vi.fn(),
   post: vi.fn(),
   put: vi.fn(),
-  delete: vi.fn(),
-  patch: vi.fn(),
 });
 
 describe('PokemonApiService', () => {

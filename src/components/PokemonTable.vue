@@ -10,7 +10,7 @@
     row-clickable
     @toggle-select="toggleSelect"
     @toggle-all="(ids) => (ids ? selectAll(ids) : clear())"
-    @rowClick="onRowClick"
+    @row-click="onRowClick"
   >
     <template #cell.sprite="{ value, row }">
       <img
@@ -59,16 +59,17 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import DynamicTable, { type DynamicRow } from '@/components/DynamicTable.vue';
-import { useSelection } from '@/composables/useSelection.ts';
-import { type TableRowData } from '@/models/poke-ui.ts';
 import { useRouter } from 'vue-router';
-import { usePokedexStore } from '@/stores/pokedex.store.ts';
+
+import DynamicTable, { type DynamicRow } from '@/components/DynamicTable.vue';
+import { Button } from '@/components/ui/button';
+import { useSelection } from '@/composables/useSelection.ts';
 import { COLUMNS } from '@/configs/pokemon-table.ts';
+import { type TableRowData } from '@/models/poke-ui.ts';
+import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 const router = useRouter();
-const { selecting, selected, toggleSelect, selectAll, clear } = useSelection();
+const { clear, selectAll, selected, selecting, toggleSelect } = useSelection();
 const { isCaught, toggle } = usePokedexStore();
 
 defineProps<{
