@@ -1,11 +1,25 @@
 # Pokédex — Frontend Engineering Challenge (Bloq.it)
+
 ---
+
+## 📌 Important Note
+
+⚠️ **Final branch for the challenge (results until August 26th, end of challenge):**  
+👉 [release branch](https://github.com/josepedromonteiro/pokemon-challenge/tree/release)
+
+✨ **Most up-to-date development branch (with improvements after the challenge):**  
+👉 [main branch](https://github.com/josepedromonteiro/pokemon-challenge/tree/main)
+
+---
+
 ### Challenge details: [link](https://github.com/bloqit/fe-engineering-challenge/blob/main/README.md)
+
 ---
 
 > Powered by the public [PokéAPI](https://pokeapi.co/). No keys, no fuss.
 
-### You can also access the deployed app directly via:  [this link](https://pokemon-challenge-rho.vercel.app)
+### You can also access the deployed app directly via: [this link](https://pokemon-challenge-rho.vercel.app)
+
 ---
 
 ## 🧩 Tech Stack
