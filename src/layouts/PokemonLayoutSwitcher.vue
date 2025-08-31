@@ -6,18 +6,21 @@
       v-if="props.viewMode === 'grid'"
       :items="props.gridItems ?? []"
       :loading="loading"
+      :selection-store="selectionStore"
       @load-more="() => emit('load-more', 'grid')"
     />
     <PokemonTable
       v-else
       :items="props.tableRows ?? []"
       :pushing="loading"
+      :selection-store="selectionStore"
       @load-more="() => emit('load-more', 'table')"
     />
   </section>
 </template>
 
 <script setup lang="ts">
+import type { useSelection } from '@/composables/useSelection.ts';
 import type { GridItemData, TableRowData, ViewMode } from '@/models/poke-ui.ts';
 
 import PokemonGrid from '@/components/PokemonGrid.vue';
@@ -29,6 +32,7 @@ export interface PokemonLayoutSwitcherProps {
   tableRows?: TableRowData[];
   loading: boolean;
   error?: string | null;
+  selectionStore?: ReturnType<typeof useSelection<number>>;
 }
 const props = defineProps<PokemonLayoutSwitcherProps>();
 

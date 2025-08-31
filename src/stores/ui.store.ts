@@ -1,3 +1,4 @@
+// TODO - To be removed and use useViewMode composable
 import type { ViewMode } from '@/models/poke-ui.ts';
 
 import { defineStore } from 'pinia';
@@ -12,9 +13,7 @@ export const useUI = defineStore('ui', () => {
 
   const setViewMode = (mode: ViewMode) => {
     viewMode.value = mode;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, mode);
-    }
+    localStorage.setItem(STORAGE_KEY, mode);
   };
 
   return {

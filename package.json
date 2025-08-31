@@ -13,7 +13,8 @@
     "test:debug": "node --inspect-brk ./node_modules/vitest/vitest.mjs --run",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "format": "prettier --write \"src/**/*.{js,ts,vue,css,scss,md,json}\""
+    "format": "prettier --write \"src/**/*.{js,ts,vue,css,scss,md,json}\"",
+    "format:lint": "npm run lint:fix && npm run format"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",

@@ -1,6 +1,5 @@
-import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
+import type { SecurePokemonDetail } from '@/models/poke-ui.ts';
 import type { PokedexEntry } from '@/models/pokedex';
-import type { DeepPartial } from '@/types/deep-partial';
 import type { ComputedRef } from 'vue';
 
 import { normalizeDate } from '@vueuse/core';
@@ -11,7 +10,6 @@ import { toast } from 'vue-sonner';
 
 import { pokeApiService } from '@/services/pokemon-api-service';
 import { usePokedexStore } from '@/stores/pokedex.store';
-import { mapPokemonDetailsToPokedexEntry } from '@/utils/pokedex.util';
 
 type DetailState = {
   loading: boolean;
@@ -41,7 +39,7 @@ export const usePokemonDetailView = () => {
   );
 
   const state = reactive<DetailState>({ error: false, loading: false });
-  const pokemon = ref<DeepPartial<PokemonDetail> | undefined>(undefined);
+  const pokemon = ref<SecurePokemonDetail | undefined>(undefined);
 
   const note = ref<string>(pokemonInDex.value?.note ?? '');
   const saveNote = () => {
@@ -50,8 +48,7 @@ export const usePokemonDetailView = () => {
 
   const toggleCaught = () => {
     if (pokemon.value) {
-      const entry = mapPokemonDetailsToPokedexEntry(pokemon.value);
-      toggle({ entry });
+      toggle({ entry: pokemon.value });
     }
   };
 
@@ -89,8 +86,7 @@ export const usePokemonDetailView = () => {
     if (!currentId.value) return;
     state.loading = true;
     try {
-      const data = await pokeApiService.getPokemonById(currentId.value);
-      pokemon.value = data;
+      pokemon.value = await pokeApiService.getPokemonById(currentId.value);
     } catch {
       state.error = true;
     } finally {

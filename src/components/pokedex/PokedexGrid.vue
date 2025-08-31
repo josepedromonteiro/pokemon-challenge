@@ -5,7 +5,7 @@
       :id="p.id"
       :key="p.id"
       :name="p.name"
-      :image="p.image"
+      :image="p.sprite"
       :caught="true"
       :selecting="selecting"
       :selected="store.isSelected(p.id)"

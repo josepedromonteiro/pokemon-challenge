@@ -96,7 +96,7 @@ import { ref, watch, onMounted, computed } from 'vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import { Button } from '@/components/ui/button';
 import PokemonDetailLayoutLoading from '@/layouts/PokemonDetailLayoutLoading.vue';
-import { onImgError } from '@/utils/image.ts';
+import { onImgError } from '@/utils/image.util.ts';
 
 // Based on https://bulbapedia.bulbagarden.net/wiki/Base_stats
 const STAT_CAP = 255;

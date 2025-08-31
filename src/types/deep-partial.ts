@@ -6,3 +6,8 @@ export type DeepPartial<T> = {
       ? ReadonlyArray<DeepPartial<U>>
       : DeepPartial<T[P]>;
 };
+
+export type DeepPartialWithRequired<T, K extends keyof T> = Required<
+  Pick<T, K>
+> &
+  DeepPartial<Omit<T, K>>;

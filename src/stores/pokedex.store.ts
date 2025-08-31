@@ -1,9 +1,5 @@
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api';
-import type {
-  PokedexEntry,
-  PokedexEntryData,
-  PokedexId,
-} from '@/models/pokedex';
+import type { PokedexEntry, PokedexId } from '@/models/pokedex';
 import type { PokedexStore } from '@/services/pokedex-store.interface';
 import type { PokemonService } from '@/services/pokemon-service.interface.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
@@ -11,17 +7,21 @@ import type { DeepPartial } from '@/types/deep-partial.ts';
 import { defineStore } from 'pinia';
 import { ref, computed, type Ref } from 'vue';
 
+import {
+  mapToViewerItem,
+  type SecurePokemonDetail,
+  type ViewerItem,
+} from '@/models/poke-ui.ts';
 import { LocalStoragePokedexStore } from '@/services/pokedex-local-storage';
 import { pokeApiService } from '@/services/pokemon-api-service';
 import { toCSV } from '@/utils/csv.util.ts';
-import { artwork, mapPokemonTypeToString } from '@/utils/pokedex.util';
 
 // TODO - Move types
 type Status = 'idle' | 'loading' | 'ready' | 'error';
 
 type CatchEntry =
   | { id: PokedexId; entry?: never }
-  | { id?: never; entry: PokedexEntryData };
+  | { id?: never; entry: SecurePokemonDetail };
 
 export interface PokedexDeps {
   store?: PokedexStore;
@@ -29,7 +29,6 @@ export interface PokedexDeps {
 }
 
 export const usePokedexStore = defineStore('pokedex', () => {
-  /** Dependencies with safe defaults (can be replaced via setDependencies). */
   let depStore: PokedexStore = new LocalStoragePokedexStore();
   let api: PokemonService = pokeApiService;
 
@@ -40,10 +39,9 @@ export const usePokedexStore = defineStore('pokedex', () => {
 
   const status = ref<Status>('idle');
   const error = ref<string | null>(null);
-  /** In-memory index of caught entries by id. */
+
   const pokemonMap: Ref<Record<PokedexId, PokedexEntry>> = ref({});
 
-  /** Sorted list view of entries. */
   const pokemons = computed<PokedexEntry[]>(() =>
     Object.values(pokemonMap.value).sort((a, b) => a.id - b.id)
   );
@@ -51,7 +49,6 @@ export const usePokedexStore = defineStore('pokedex', () => {
   const isCaught = (id: PokedexId) => Boolean(pokemonMap.value[id]);
   const pokemonById = (id: PokedexId) => pokemonMap.value[id];
 
-  /** Load snapshot from persistence. */
   const load = async () => {
     status.value = 'loading';
     error.value = null;
@@ -64,7 +61,6 @@ export const usePokedexStore = defineStore('pokedex', () => {
     }
   };
 
-  /** Save current snapshot to persistence. */
   const save = async () => {
     await depStore.save(pokemonMap.value);
   };
@@ -83,13 +79,6 @@ export const usePokedexStore = defineStore('pokedex', () => {
     const existing = pokemonMap.value[id];
     if (existing) return existing;
 
-    if (hasEntry) {
-      const entry: PokedexEntry = { ...input.entry!, caughtAt: now };
-      pokemonMap.value = { ...pokemonMap.value, [id]: entry };
-      await depStore.catch(entry);
-      return entry;
-    }
-
     let detail: DeepPartial<PokemonDetail> | undefined;
     try {
       detail = await api.getPokemonById(id);
@@ -97,21 +86,29 @@ export const usePokedexStore = defineStore('pokedex', () => {
       /* ignore; fallback below */
     }
 
-    const entry: PokedexEntry = {
+    // const entry: PokedexEntry = {
+    //   caughtAt: now,
+    //   height: detail?.height ?? 0,
+    //   id,
+    //   image: artwork(id),
+    //   name: detail?.name ?? `#${id}`,
+    //   types: mapPokemonTypeToString(detail?.types ?? []),
+    // };
+
+    if (!detail) {
+      return undefined;
+    }
+
+    const entry: ViewerItem = mapToViewerItem(detail, {
       caughtAt: now,
-      height: detail?.height ?? 0,
-      id,
-      image: artwork(id),
-      name: detail?.name ?? `#${id}`,
-      types: mapPokemonTypeToString(detail?.types ?? []),
-    };
+      isCaught: true,
+    });
 
     pokemonMap.value = { ...pokemonMap.value, [id]: entry };
     await depStore.catch(entry);
     return entry;
   };
 
-  /** Remove one or many Pokémon from the Pokedex. */
   const release = async (ids: PokedexId | PokedexId[]) => {
     const list = Array.isArray(ids) ? ids : [ids];
     if (!list.length) return;
@@ -129,7 +126,6 @@ export const usePokedexStore = defineStore('pokedex', () => {
     await depStore.release(list);
   };
 
-  /** Toggle caught state: release if present, otherwise catch. */
   const toggle = async (input: CatchEntry) => {
     const hasEntry = 'entry' in input && !!input.entry;
     const id: PokedexId = hasEntry ? input.entry!.id : input.id!;
@@ -140,7 +136,6 @@ export const usePokedexStore = defineStore('pokedex', () => {
     return catchOne(hasEntry ? { entry: input.entry } : { id });
   };
 
-  /** Persist a note and mirror it in local state */
   const setNote = async (id: PokedexId, note: string) => {
     await depStore.setNote(id, note);
     const cur = pokemonMap.value[id];

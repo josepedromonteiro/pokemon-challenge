@@ -68,15 +68,17 @@ import { COLUMNS } from '@/configs/pokemon-table.ts';
 import { type TableRowData } from '@/models/poke-ui.ts';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
-const router = useRouter();
-const { clear, selectAll, selected, selecting, toggleSelect } = useSelection();
-const { isCaught, toggle } = usePokedexStore();
-
-defineProps<{
+const props = defineProps<{
   items: TableRowData[];
   loading?: boolean;
   pushing?: boolean;
+  selectionStore?: ReturnType<typeof useSelection<number>>;
 }>();
+
+const router = useRouter();
+const { isCaught, toggle } = usePokedexStore();
+const { clear, selectAll, selected, selecting, toggleSelect } =
+  props.selectionStore;
 
 const onRowClick = (rowData: DynamicRow) => {
   router.push(`/pokemon/${rowData.id}`);

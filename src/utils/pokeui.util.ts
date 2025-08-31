@@ -10,7 +10,7 @@ export const toGridItem = (
   const id = pokemonData.id!;
   return {
     id,
-    image: generateSpritesWillFallback(pokemonData),
     name: pokemonData.name ?? String(id),
+    sprite: generateSpritesWillFallback(pokemonData),
   };
 };

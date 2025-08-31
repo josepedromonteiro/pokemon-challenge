@@ -5,7 +5,7 @@
       <Button
         :disabled="disabled"
         variant="outline"
-        class="w-56 justify-between"
+        :class="cn('w-56 justify-between', buttonClass)"
       >
         <div class="flex min-w-0 flex-1 items-center gap-1">
           <template v-if="selectedLabels.length">
@@ -80,7 +80,7 @@
 
 <script setup lang="ts">
 import { ChevronsUpDown } from 'lucide-vue-next';
-import { computed, ref, watch } from 'vue';
+import { computed, type HTMLAttributes, ref, watch } from 'vue';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -98,6 +98,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@/components/ui/popover';
+import { cn } from '@/lib/utils.ts';
 
 // TODO - Move type declarations to a separate file
 
@@ -113,6 +114,7 @@ const props = withDefaults(
     clearable?: boolean;
     searchable?: boolean;
     maxTags?: number;
+    buttonClass?: HTMLAttributes['class'];
   }>(),
   {
     clearable: true,

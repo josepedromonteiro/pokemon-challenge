@@ -6,17 +6,7 @@
       <div v-if="!loading && !error" class="status">
         Showing <b>{{ gridItems.length }}</b> of <b>{{ total }}</b>
       </div>
-
-      <Tabs v-model="viewMode" class="tabs">
-        <TabsList>
-          <TabsTrigger value="grid">
-            <GridIcon />
-          </TabsTrigger>
-          <TabsTrigger value="table">
-            <TableIcon />
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <ViewSwitchButton v-model="viewMode" />
     </div>
 
     <div v-if="error" class="error">
@@ -38,12 +28,11 @@
 </template>
 
 <script setup lang="ts">
-import { GridIcon, TableIcon } from 'lucide-vue-next';
 import { onMounted } from 'vue';
 
 import ControlsBar from '@/components/ControlsBar.vue';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
+import ViewSwitchButton from '@/components/ViewSwitchButton.vue';
 import { useHomeView } from '@/composables/useHomeView';
 import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
 

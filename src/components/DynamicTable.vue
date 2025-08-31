@@ -29,10 +29,20 @@
           ]"
           @click="onRowClick(row)"
         >
-          <TableCell v-if="selecting" class="w-8">
+          <TableCell
+            v-if="selecting"
+            class="w-8"
+            @click.stop
+            @mousedown.stop
+            @keydown.stop
+          >
             <Checkbox
-              :checked="isSelected(row.id)"
-              @update:checked.stop.prevent="() => emit('toggle-select', row.id)"
+              :model-value="isSelected(row.id)"
+              @update:model-value="
+                () => {
+                  emit('toggle-select', row.id);
+                }
+              "
             />
           </TableCell>
 
@@ -234,8 +244,11 @@ const onRowClick = (data: DynamicRow) => {
 };
 
 const onToggleAll = (checked: boolean) => {
-  if (checked) emit('toggle-all', rowIds.value);
-  else emit('toggle-all', null);
+  if (checked) {
+    emit('toggle-all', rowIds.value);
+  } else {
+    emit('toggle-all', null);
+  }
 };
 </script>
 

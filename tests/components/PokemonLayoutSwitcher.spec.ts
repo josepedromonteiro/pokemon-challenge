@@ -22,7 +22,7 @@ const TableStub = {
 describe('PokemonListWrapper', () => {
   const baseProps: PokemonLayoutSwitcherProps = {
     error: null as string | null,
-    gridItems: [{ id: 1, image: 'x', name: 'pikachu' }],
+    gridItems: [{ id: 1, sprite: 'x', name: 'pikachu' }],
     loading: false,
     tableRows: [
       {

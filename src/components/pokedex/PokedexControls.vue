@@ -12,19 +12,18 @@
         v-model.trim="nameModel"
         type="search"
         placeholder="Search"
-        class="w-56"
+        class="min-w-56 flex-1"
       />
 
       <MultiSelect
         v-model="selectedTypes"
         :options="typeOptions"
         placeholder="Filter by types"
-        class="w-56"
+        button-class="min-w-36 flex-1 w-36"
         @done="onSelectTypes"
       />
-
       <Select v-model="sort">
-        <SelectTrigger>
+        <SelectTrigger class="min-w-36 flex-1">
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>
@@ -38,62 +37,28 @@
           <SelectItem key="clear" :value="null"> Clear</SelectItem>
         </SelectContent>
       </Select>
-
-      <Button variant="secondary" @click="pokedexViewStore.toggleSelecting">
-        {{ selecting ? 'Cancel' : 'Select' }}
+      <Button variant="secondary" @click="selectStore?.toggleSelecting">
+        {{ selectStore?.selecting.value ? 'Cancel' : 'Select' }}
       </Button>
-
       <Button
-        variant="secondary"
-        :disabled="selected.size === 0"
-        @click="pokedexViewStore.removeSelected"
+        v-if="(selectStore?.selected.value.size ?? 0) > 0"
+        variant="destructive"
+        @click="emit('on-remove')"
       >
-        Remove ({{ selected.size }})
+        Remove ({{ selectStore?.selected.value.size ?? 0 }})
       </Button>
 
-      <Button @click="onExport">Export CSV</Button>
+      <slot name="actions"> </slot>
     </div>
   </div>
-
-  <AlertDialog v-model:open="showExportDialog">
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Selection active</AlertDialogTitle>
-        <AlertDialogDescription>
-          You currently have the selection option active. Do you want to export
-          the selected ({{ selected.size }}
-          pokémons) ? Or all of your Pokédex ?
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-
-      <AlertDialogFooter>
-        <AlertDialogAction size="sm" @click="exportFull"
-          >Export Full Pokédex</AlertDialogAction
-        >
-        <AlertDialogAction size="sm" @click="exportSelected"
-          >Export Selected Pokémons</AlertDialogAction
-        >
-        <AlertDialogCancel size="sm">Cancel</AlertDialogCancel>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
+import type { useSelection } from '@/composables/useSelection.ts';
+
 import { computed, onMounted, ref, watch } from 'vue';
 
 import MultiSelect from '@/components/MultiSelect.vue';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -106,7 +71,6 @@ import {
 import { type OrderByFields } from '@/services/pokedex-filter-service.ts';
 import { pokeApiService } from '@/services/pokemon-api-service.ts';
 import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
-import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
 const AVAILABLE_SORT_OPTIONS: Record<OrderByFields, string> = {
@@ -116,14 +80,18 @@ const AVAILABLE_SORT_OPTIONS: Record<OrderByFields, string> = {
   oldest: 'Oldest',
 };
 
-const pokedexViewStore = usePokedexViewStore();
-const { selected, selecting } = storeToRefs(pokedexViewStore);
+defineProps<{
+  selectStore?: ReturnType<typeof useSelection<number>>;
+}>();
+
+const emit = defineEmits<{
+  (e: 'on-remove'): void;
+}>();
 
 const pokedexQuery = usePokedexQuery();
 const pokedexStore = usePokedexStore();
 
 const sort = ref<OrderByFields | undefined>(undefined);
-const showExportDialog = ref(false);
 const allTypes = ref<string[]>([]);
 const selectedTypes = ref<string[]>(
   (pokedexQuery.filter?.types as string[]) ?? []
@@ -151,24 +119,6 @@ const setupTypes = () => {
   });
 };
 
-const onExport = () => {
-  if (selecting) {
-    showExportDialog.value = true;
-  } else {
-    exportFull();
-  }
-};
-
-const exportFull = () => {
-  pokedexStore.exportCSV();
-  showExportDialog.value = false;
-};
-
-const exportSelected = () => {
-  pokedexStore.exportCSV(Array.from(selected.value));
-  showExportDialog.value = false;
-};
-
 onMounted(() => {
   setupTypes();
 });
@@ -190,11 +140,11 @@ watch(
 @reference "@/index.css";
 @layer components {
   .controls {
-    @apply flex flex-col gap-3 md:flex-row md:items-center md:justify-between;
+    @apply flex flex-col gap-x-8 gap-y-3 md:flex-row md:items-center md:justify-between;
   }
 
   .controls-left {
-    @apply flex items-baseline gap-3;
+    @apply flex items-baseline gap-3 whitespace-nowrap;
   }
 
   .controls-title {

@@ -12,7 +12,7 @@ interface PokedexFilterResult {
 }
 
 /** Parse various date inputs to ms since epoch; fallback to 0 on invalid. */
-const timeFrom = (value: string): number => {
+const timeFrom = (value?: string): number => {
   const d = normalizeDate(value);
   if (d) return d.getTime();
   const ts = Date.parse(String(value ?? ''));

@@ -13,7 +13,7 @@ import {
 import { pokeApiService } from '@/services/pokemon-api-service';
 import { usePokedexStore } from '@/stores/pokedex.store';
 import { useUI } from '@/stores/ui.store';
-import { toGridItem } from '@/utils/pokeui.utils';
+import { toGridItem } from '@/utils/pokeui.util.ts';
 
 export function useHomeView() {
   const ui = useUI();
@@ -69,9 +69,7 @@ export function useHomeView() {
       );
 
       total.value = page.count ?? 0;
-      const items = (page.results ?? []).filter(
-        Boolean
-      ) as DeepPartial<PokemonDetail>[];
+      const items = page.results ?? [];
       details.value = replace ? items : [...details.value, ...items];
     } catch {
       error.value = 'Failed to load Pokémon.';

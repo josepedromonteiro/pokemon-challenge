@@ -11,6 +11,10 @@ export const useSelection = <T extends AvailableTypes = number>() => {
     if (!selecting.value) selected.value.clear();
   };
 
+  const isSelected = (id: T) => {
+    return (selected.value as Set<T>).has(id);
+  };
+
   const toggleSelect = (id: T) => {
     const next = new Set<T>(selected.value as Set<T>);
     if (next.has(id)) {
@@ -27,10 +31,12 @@ export const useSelection = <T extends AvailableTypes = number>() => {
 
   const clear = () => {
     selected.value.clear();
+    selecting.value = false;
   };
 
   return {
     clear,
+    isSelected,
     selectAll,
     selected,
     selecting,

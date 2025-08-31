@@ -21,13 +21,11 @@ export const usePokedexViewStore = defineStore('pokedexView', () => {
   const selecting = ref(false);
   const selected = ref<Set<number>>(new Set());
 
-  /** Enable/disable selection mode; clears selection when disabling. */
   const toggleSelecting = () => {
     selecting.value = !selecting.value;
     if (!selecting.value) selected.value.clear();
   };
 
-  /** Toggle a single row id in the selection set. */
   const toggleSelected = (id: number) => {
     const next = new Set(selected.value);
     if (next.has(id)) {
@@ -38,18 +36,20 @@ export const usePokedexViewStore = defineStore('pokedexView', () => {
     selected.value = next;
   };
 
-  /** Check if a row id is selected. */
   const isSelected = (id: number) => {
     return selected.value.has(id);
   };
 
-  /** Remove all selected entries and exit selection mode. */
   const removeSelected = () => {
     const ids = [...selected.value];
     if (!ids.length) return;
     release(ids);
     selected.value.clear();
     selecting.value = false;
+  };
+
+  const removeItems = (ids: number[]) => {
+    release(ids ?? []);
   };
 
   const init = async () => {
@@ -61,6 +61,7 @@ export const usePokedexViewStore = defineStore('pokedexView', () => {
     init,
     isSelected,
     loading,
+    removeItems,
     removeSelected,
     selected,
     selecting,

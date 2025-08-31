@@ -4,6 +4,7 @@ import type {
   PokemonSummary,
 } from '@/models/api/poke.api.ts';
 import type { PokemonDetail } from '@/models/api/pokemon-detail.api.ts';
+import type { SecurePokemonDetail } from '@/models/poke-ui.ts';
 import type { PokemonService } from '@/services/pokemon-service.interface.ts';
 import type { DeepPartial } from '@/types/deep-partial.ts';
 import type { HttpClient } from '@/types/http.ts';
@@ -34,8 +35,8 @@ export class PokemonApiService implements PokemonService {
     return response.data;
   }
 
-  async getPokemonById(id: number): Promise<DeepPartial<PokemonDetail>> {
-    const response = await this.httpClient.get<DeepPartial<PokemonDetail>>(
+  async getPokemonById(id: number): Promise<SecurePokemonDetail> {
+    const response = await this.httpClient.get<SecurePokemonDetail>(
       `/pokemon/${id}`
     );
     return response.data;
