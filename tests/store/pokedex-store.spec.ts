@@ -59,11 +59,41 @@ const detail = (
       front_default: null,
       other: { 'official-artwork': { front_default: null } },
     },
+    stats: [
+      { base_stat: 10, stat: { name: 'hp', url: '' } },
+      { base_stat: 10, stat: { name: 'attack', url: '' } },
+      { base_stat: 10, stat: { name: 'defense', url: '' } },
+      { base_stat: 10, stat: { name: 'special-attack', url: '' } },
+      { base_stat: 10, stat: { name: 'special-defense', url: '' } },
+      { base_stat: 10, stat: { name: 'speed', url: '' } },
+    ],
     types: types.map((t: string, i: number) => ({
       slot: i + 1,
       type: { name: t, url: '' },
     })),
+    weight: 100,
   }) as unknown as PokemonDetail;
+
+const viewerSeed = (
+  id: number,
+  name = `p${id}`,
+  types: string[] = ['electric']
+): PokedexEntry => ({
+  id,
+  name,
+  sprite: 's',
+  types,
+  hp: 10,
+  attack: 10,
+  defense: 10,
+  specialAttack: 10,
+  specialDefense: 10,
+  speed: 10,
+  isCaught: true,
+  height: 4,
+  weight: 60,
+  caughtAt: 't0',
+});
 
 describe('usePokedexStore', () => {
   beforeEach(() => {
@@ -72,14 +102,7 @@ describe('usePokedexStore', () => {
 
   it('loads from persistence and sets status', async () => {
     const seed: Record<PokedexId, PokedexEntry> = {
-      25: {
-        caughtAt: 't0',
-        height: 4,
-        id: 25,
-        image: 'img',
-        name: 'pikachu',
-        types: ['electric'],
-      },
+      25: viewerSeed(25, 'pikachu', ['electric']),
     };
     const mem = new MemoryStore(seed);
     const dex = usePokedexStore();
@@ -92,28 +115,27 @@ describe('usePokedexStore', () => {
     expect(dex.pokemons[0].id).toBe(25);
   });
 
-  it('catchOne with entry stamps caughtAt and persists', async () => {
+  it('catchOne with entry stamps caughtAt and persists (requires API)', async () => {
     const mem = new MemoryStore();
+    const api = makeApi({
+      getPokemonById: async (id: number) =>
+        detail(id, 'bulbasaur', 7, ['grass']),
+    });
     const dex = usePokedexStore();
-    dex.setDependencies({ store: mem });
+    dex.setDependencies({ store: mem, api: api as any });
 
     const nowBefore = Date.now();
     const entry = await dex.catchOne({
-      entry: {
-        height: 7,
-        id: 1,
-        image: 'i',
-        name: 'bulbasaur',
-        types: ['grass'],
-      },
+      entry: { id: 1, name: 'bulbasaur' } as any,
     });
     const nowAfter = Date.now();
 
-    expect(entry.id).toBe(1);
-    expect(new Date(entry.caughtAt).getTime()).toBeGreaterThanOrEqual(
+    expect(entry).toBeTruthy();
+    expect(entry!.id).toBe(1);
+    expect(new Date(entry!.caughtAt!).getTime()).toBeGreaterThanOrEqual(
       nowBefore
     );
-    expect(new Date(entry.caughtAt).getTime()).toBeLessThanOrEqual(nowAfter);
+    expect(new Date(entry!.caughtAt!).getTime()).toBeLessThanOrEqual(nowAfter);
     expect(mem.catchSpy).toHaveBeenCalledTimes(1);
     expect(dex.isCaught(1)).toBe(true);
   });
@@ -129,12 +151,13 @@ describe('usePokedexStore', () => {
 
     const e = await dex.catchOne({ id: 4 });
     expect(api.getPokemonById).toHaveBeenCalledWith(4);
-    expect(e.name).toBe('charmander');
-    expect(e.height).toBe(6);
-    expect(e.types).toEqual(['fire']);
+    expect(e).toBeTruthy();
+    expect(e!.name).toBe('charmander');
+    expect(e!.height).toBe(6);
+    expect(e!.types).toEqual(['fire']);
   });
 
-  it('catchOne by id falls back gracefully when API fails', async () => {
+  it('catchOne by id returns undefined when API fails', async () => {
     const mem = new MemoryStore();
     const api = makeApi({
       getPokemonById: async () => {
@@ -145,23 +168,20 @@ describe('usePokedexStore', () => {
     dex.setDependencies({ api: api as any, store: mem });
 
     const e = await dex.catchOne({ id: 99 });
-    expect(e.id).toBe(99);
-    expect(e.name).toBe('#99');
-    expect(e.height).toBe(0);
-    expect(e.types).toEqual([]);
+    expect(e).toBeUndefined();
+    expect(dex.isCaught(99)).toBe(false);
   });
 
   it('release removes one or many ids and persists', async () => {
     const mem = new MemoryStore();
+    const api = makeApi({
+      getPokemonById: async (id: number) => detail(id, `p${id}`, 1, []),
+    });
     const dex = usePokedexStore();
-    dex.setDependencies({ store: mem });
+    dex.setDependencies({ store: mem, api: api as any });
 
-    await dex.catchOne({
-      entry: { height: 1, id: 1, image: 'i', name: 'a', types: [] },
-    });
-    await dex.catchOne({
-      entry: { height: 1, id: 2, image: 'i', name: 'b', types: [] },
-    });
+    await dex.catchOne({ entry: { id: 1 } as any });
+    await dex.catchOne({ entry: { id: 2 } as any });
     expect(dex.pokemons.map((p) => p.id)).toEqual([1, 2]);
 
     await dex.release(1);
@@ -171,10 +191,13 @@ describe('usePokedexStore', () => {
     expect(dex.pokemons.length).toBe(0);
   });
 
-  it('toggle releases if present, otherwise catches', async () => {
+  it('toggle releases if present, otherwise catches (API required for catch)', async () => {
     const mem = new MemoryStore();
+    const api = makeApi({
+      getPokemonById: async (id: number) => detail(id, `p${id}`, 1, []),
+    });
     const dex = usePokedexStore();
-    dex.setDependencies({ store: mem });
+    dex.setDependencies({ store: mem, api: api as any });
 
     await dex.toggle({ id: 5 });
     expect(dex.isCaught(5)).toBe(true);
@@ -185,14 +208,7 @@ describe('usePokedexStore', () => {
 
   it('setNote delegates to store and mirrors in local map', async () => {
     const mem = new MemoryStore({
-      7: {
-        caughtAt: 't0',
-        height: 5,
-        id: 7,
-        image: 'i',
-        name: 'squirtle',
-        types: ['water'],
-      },
+      7: viewerSeed(7, 'squirtle', ['water']),
     });
     const dex = usePokedexStore();
     dex.setDependencies({ store: mem });

@@ -4,12 +4,14 @@
     :columns="COLUMNS"
     :rows="items"
     :loading="loading"
-    :selecting="selecting"
-    :selected="selected"
+    :selecting="selectionStore?.selecting.value"
+    :selected="selectionStore?.selected.value"
     :pushing="pushing"
     row-clickable
-    @toggle-select="toggleSelect"
-    @toggle-all="(ids) => (ids ? selectAll(ids) : clear())"
+    @toggle-select="selectionStore?.toggleSelect"
+    @toggle-all="
+      (ids) => (ids ? selectionStore?.selectAll(ids) : selectionStore?.clear())
+    "
     @row-click="onRowClick"
   >
     <template #cell.sprite="{ value, row }">
@@ -68,7 +70,7 @@ import { COLUMNS } from '@/configs/pokemon-table.ts';
 import { type TableRowData } from '@/models/poke-ui.ts';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 
-const props = defineProps<{
+defineProps<{
   items: TableRowData[];
   loading?: boolean;
   pushing?: boolean;
@@ -77,8 +79,6 @@ const props = defineProps<{
 
 const router = useRouter();
 const { isCaught, toggle } = usePokedexStore();
-const { clear, selectAll, selected, selecting, toggleSelect } =
-  props.selectionStore;
 
 const onRowClick = (rowData: DynamicRow) => {
   router.push(`/pokemon/${rowData.id}`);

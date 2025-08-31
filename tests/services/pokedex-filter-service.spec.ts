@@ -8,12 +8,20 @@ import {
 } from '@/services/pokedex-filter-service.ts';
 
 const sample = (override: Partial<PokedexEntry>): PokedexEntry => ({
-  caughtAt: '2020-01-02T00:00:00Z',
-  height: 7,
   id: 1,
-  image: '',
   name: 'bulbasaur',
+  sprite: '',
   types: ['grass'],
+  hp: 10,
+  attack: 10,
+  defense: 10,
+  specialAttack: 10,
+  specialDefense: 10,
+  speed: 10,
+  isCaught: true,
+  height: 7,
+  weight: 69,
+  caughtAt: '2020-01-02T00:00:00Z',
   ...override,
 });
 
@@ -72,7 +80,7 @@ describe('PokedexFilterService', () => {
   it('handles missing/invalid fields', async () => {
     const svc3 = new PokedexFilterService(() => [
       sample({ height: 3, id: 1, name: 'A' }),
-      sample({ height: NaN, id: 2, name: 'B' }),
+      sample({ height: Number.NaN, id: 2, name: 'B' }),
     ]);
     const res = await svc3.list({ filter: {}, orderBy: 'height-asc' });
     expect(res.data.map((p) => p.id)).toEqual([2, 1]);

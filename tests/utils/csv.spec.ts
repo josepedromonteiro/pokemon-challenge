@@ -81,11 +81,11 @@ describe('toCSV', () => {
     const text = await blobToText(lastBlob);
     const lines = text.split('\n');
 
-    expect(lines[0]).toBe('id,name,image,note,caughtAt');
+    expect(lines[0]).toBe('caughtAt,id,image,name,note');
 
-    expect(lines[1]).toBe('1,"bulba, ""saur""",img,,2020-01-01T00:00:00Z');
+    expect(lines[1]).toBe('2020-01-01T00:00:00Z,1,img,"bulba, ""saur""",');
 
-    expect(lines[2]).toBe('2,ivysaur,img,,2020-01-02T00:00:00Z');
+    expect(lines[2]).toBe('2020-01-02T00:00:00Z,2,img,ivysaur,');
 
     expect((lastBlob as Blob).type).toBe('text/csv;charset=utf-8;');
   });
@@ -102,7 +102,7 @@ describe('toCSV', () => {
     const text = await blobToText(lastBlob);
     const [header, ...rest] = text.split('\n');
 
-    expect(header).toBe('text,note');
-    expect(rest.join('\n')).toBe('"hello\nworld","she said ""hi"""');
+    expect(header).toBe('note,text');
+    expect(rest.join('\n')).toBe('"she said ""hi""","hello\nworld"');
   });
 });
