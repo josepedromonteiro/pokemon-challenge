@@ -17,8 +17,8 @@ import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 
 import NavigationBar from '@/components/navigation-bar/NavigationBar.vue';
-import { Toaster } from '@/components/ui/sonner';
 import { TABS } from '@/configs/toolbar.config.ts';
+import { Toaster } from '@/lib/ui/sonner';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 import 'vue-sonner/style.css'; // vue-sonner v2 requires this import
 

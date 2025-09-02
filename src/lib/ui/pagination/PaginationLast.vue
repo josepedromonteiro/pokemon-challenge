@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ButtonVariants } from '@/components/ui/button';
+import type { ButtonVariants } from '@/lib/ui/button';
 import type { PaginationLastProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
 
@@ -26,7 +26,7 @@ import { reactiveOmit } from '@vueuse/core';
 import { ChevronRightIcon } from 'lucide-vue-next';
 import { PaginationLast, useForwardProps } from 'reka-ui';
 
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/lib/ui/button';
 import { cn } from '@/lib/utils';
 
 const props = withDefaults(

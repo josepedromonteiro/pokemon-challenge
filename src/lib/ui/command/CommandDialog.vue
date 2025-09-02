@@ -23,7 +23,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/lib/ui/dialog';
 
 import Command from './Command.vue';
 

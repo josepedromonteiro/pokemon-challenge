@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/lib/ui/button';
+import { Checkbox } from '@/lib/ui/checkbox';
 import { onImgError } from '@/utils/image.util.ts';
 
 defineProps<{

@@ -64,9 +64,9 @@
 import { useRouter } from 'vue-router';
 
 import DynamicTable, { type DynamicRow } from '@/components/DynamicTable.vue';
-import { Button } from '@/components/ui/button';
 import { useSelection } from '@/composables/useSelection.ts';
 import { COLUMNS } from '@/configs/pokemon-table.ts';
+import { Button } from '@/lib/ui/button';
 import { type TableRowData } from '@/models/poke-ui.ts';
 import { usePokedexStore } from '@/stores/pokedex.store.ts';
 

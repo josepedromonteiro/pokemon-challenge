@@ -94,8 +94,8 @@ import type { DeepPartial } from '@/types/deep-partial.ts';
 import { ref, watch, onMounted, computed } from 'vue';
 
 import ProgressBar from '@/components/ProgressBar.vue';
-import { Button } from '@/components/ui/button';
 import PokemonDetailLayoutLoading from '@/layouts/PokemonDetailLayoutLoading.vue';
+import { Button } from '@/lib/ui/button';
 import { onImgError } from '@/utils/image.util.ts';
 
 // Based on https://bulbapedia.bulbagarden.net/wiki/Base_stats

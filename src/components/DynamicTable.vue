@@ -142,7 +142,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { Checkbox } from '@/components/ui/checkbox';
+import { Checkbox } from '@/lib/ui/checkbox';
 import {
   Pagination,
   PaginationContent,
@@ -150,7 +150,7 @@ import {
   PaginationPrevious,
   PaginationNext,
   PaginationEllipsis,
-} from '@/components/ui/pagination';
+} from '@/lib/ui/pagination';
 import {
   Table,
   TableHeader,
@@ -158,7 +158,7 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from '@/components/ui/table';
+} from '@/lib/ui/table';
 
 // TODO - Move type declarations
 export interface DynamicTableProps {

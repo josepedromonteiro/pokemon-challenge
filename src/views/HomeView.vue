@@ -31,10 +31,10 @@
 import { onMounted } from 'vue';
 
 import ControlsBar from '@/components/ControlsBar.vue';
-import { Button } from '@/components/ui/button';
 import ViewSwitchButton from '@/components/ViewSwitchButton.vue';
 import { useHomeView } from '@/composables/useHomeView';
 import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
+import { Button } from '@/lib/ui/button';
 
 const {
   canLoadMore,

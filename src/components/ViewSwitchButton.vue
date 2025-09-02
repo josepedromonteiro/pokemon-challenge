@@ -16,7 +16,7 @@ import type { ViewMode } from '@/models/poke-ui.ts';
 
 import { GridIcon, TableIcon } from 'lucide-vue-next';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/lib/ui/tabs';
 
 const model = defineModel<ViewMode>();
 </script>

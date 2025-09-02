@@ -59,15 +59,15 @@ import type { useSelection } from '@/composables/useSelection.ts';
 import { computed, onMounted, ref, watch } from 'vue';
 
 import MultiSelect from '@/components/MultiSelect.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/lib/ui/button';
+import { Input } from '@/lib/ui/input';
 import {
   Select,
   SelectContent,
   SelectTrigger,
   SelectItem,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/lib/ui/select';
 import { type OrderByFields } from '@/services/pokedex-filter-service.ts';
 import { pokeApiService } from '@/services/pokemon-api-service.ts';
 import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';

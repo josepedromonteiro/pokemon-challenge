@@ -50,6 +50,11 @@ import { onMounted, ref, watch } from 'vue';
 
 import PokedexControls from '@/components/pokedex/PokedexControls.vue';
 import PokedexProgress from '@/components/pokedex/PokedexProgress.vue';
+import ViewSwitchButton from '@/components/ViewSwitchButton.vue';
+import { usePokemonViewer } from '@/composables/usePokemonViewer.ts';
+import { useSelection } from '@/composables/useSelection.ts';
+import { useViewMode } from '@/composables/useViewMode.ts';
+import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,13 +64,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import ViewSwitchButton from '@/components/ViewSwitchButton.vue';
-import { usePokemonViewer } from '@/composables/usePokemonViewer.ts';
-import { useSelection } from '@/composables/useSelection.ts';
-import { useViewMode } from '@/composables/useViewMode.ts';
-import PokemonLayoutSwitcher from '@/layouts/PokemonLayoutSwitcher.vue';
+} from '@/lib/ui/alert-dialog';
+import { Button } from '@/lib/ui/button';
 import { PokedexFilterService } from '@/services/pokedex-filter-service.ts';
 import { usePokedexQuery } from '@/stores/pokedex-query.store.ts';
 import { usePokedexViewStore } from '@/stores/pokedex-view.store.ts';

@@ -82,9 +82,9 @@
 import { ChevronsUpDown } from 'lucide-vue-next';
 import { computed, type HTMLAttributes, ref, watch } from 'vue';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/lib/ui/badge';
+import { Button } from '@/lib/ui/button';
+import { Checkbox } from '@/lib/ui/checkbox';
 import {
   Command,
   CommandInput,
@@ -92,12 +92,8 @@ import {
   CommandList,
   CommandItem,
   CommandGroup,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@/components/ui/popover';
+} from '@/lib/ui/command';
+import { Popover, PopoverTrigger, PopoverContent } from '@/lib/ui/popover';
 import { cn } from '@/lib/utils.ts';
 
 // TODO - Move type declarations to a separate file

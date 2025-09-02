@@ -44,15 +44,15 @@
 import { Clipboard, Send, Share2 } from 'lucide-vue-next';
 import { onMounted, watch } from 'vue';
 
-import { Button } from '@/components/ui/button';
+import { usePokemonDetailView } from '@/composables/usePokemonDetailView.ts';
+import PokemonDetailLayout from '@/layouts/PokemonDetailLayout.vue';
+import { Button } from '@/lib/ui/button';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { usePokemonDetailView } from '@/composables/usePokemonDetailView.ts';
-import PokemonDetailLayout from '@/layouts/PokemonDetailLayout.vue';
+} from '@/lib/ui/dropdown-menu';
 
 const {
   caught,
